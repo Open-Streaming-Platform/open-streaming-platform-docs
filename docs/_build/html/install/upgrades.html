@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upgrades &mdash; Open Streaming Platform  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tweaks" href="tweaks.html" />
+    <link rel="prev" title="Installation" href="install.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Open Streaming Platform
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview/about.html">About Open Streaming Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/repo.html">Repository Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/attribution.html">Attribution</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Upgrades</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#standard-upgrade">Standard Upgrade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#versions-0-8-8-to-versions-0-8-8">Versions &lt; 0.8.8 to Versions &gt; 0.8.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#x-to-0-8-x">0.8.x to 0.8.x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.7.x to 0.8.x</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#resetting-db-migrations">Resetting DB Migrations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tweaks.html">Tweaks</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Open Streaming Platform</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Upgrades</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/install/upgrades.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="upgrades">
+<h1>Upgrades<a class="headerlink" href="#upgrades" title="Permalink to this headline"></a></h1>
+<section id="standard-upgrade">
+<h2>Standard Upgrade<a class="headerlink" href="#standard-upgrade" title="Permalink to this headline"></a></h2>
+</section>
+<section id="versions-0-8-8-to-versions-0-8-8">
+<h2>Versions &lt; 0.8.8 to Versions &gt; 0.8.8<a class="headerlink" href="#versions-0-8-8-to-versions-0-8-8" title="Permalink to this headline"></a></h2>
+<p>Due to changes made in v0.8.8 to simplify Nginx Configurations, the upgrade to versions greater to 0.8. will require an extra step to move your server specific changes to the new setup.</p>
+<blockquote>
+<div><p><strong>Note:</strong> Prior to the upgrade, it is recommended you backup the /usr/local/nginx/conf directory to have a copy of your original settings to transpose to the new setup</p>
+</div></blockquote>
+<blockquote>
+<div><p><strong>Important Note: When updating, do the following to get the files into alignment:</strong>
+{.is-warning}</p>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>Run the osp-config updater process as normal</p></li>
+<li><p>On completion, exit the osp-config updater</p></li>
+<li><p>Create the the custom directory in the /usr/local/nginx/conf folder</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mkdir</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Copy the new custom files from the clone repo as listed below to /usr/local/nginx/conf/custom/:</p></li>
+</ol>
+<ul class="simple">
+<li><p><strong>OSP-Core, ejabberd, OSP-Edge, Single Servers:</strong> $Repo/installs/nginx-core/osp-custom-*.conf</p></li>
+<li><p><strong>OSP-Edge:</strong> $Repo/installs/osp-edge/setup/nginx/custom/osp-edge-custom-*.conf</p></li>
+<li><p><strong>OSP-RTMP:</strong> $Repo/installs/osp-rtmp/setup/nginx/custom/osp-rtmp-custom-*.conf</p></li>
+</ul>
+<ol class="arabic simple" start="5">
+<li><p>Reopen the osp-config updater and run the update process a second time.</p></li>
+<li><p>Follow the instructions below to reconfigure the new custom nginx files</p></li>
+</ol>
+<hr class="docutils" />
+<p>The following files will need to be updates for each OSP service:</p>
+<ol class="arabic simple">
+<li><p><strong>OSP-Core, OSP-Edge, ejabberd, Single Servers:</strong> SSL/TLS Certificates will need to be transposed to the new location “/usr/local/nginx/conf/custom/osp-custom-servers.conf”.  The original information is located in the original /usr/local/nginx/conf/nginx.conf file</p></li>
+</ol>
+<ul class="simple">
+<li><p>Edit the /usr/local/nginx/conf/custom/osp-custom-servers.conf</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">servers</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Comment the following Line:
+<code class="docutils literal notranslate"><span class="pre">listen</span> <span class="pre">80</span> <span class="pre">default_server;</span></code></p></li>
+<li><p>Uncomment the following lines and input the information for your TLS/SSL Certificate</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># listen 443 ssl http2 default_server;</span>
+<span class="c1"># ssl_certificate /etc/letsencrypt/live/osp.example.com/fullchain.pem;</span>
+<span class="c1"># ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;</span>
+<span class="c1"># ssl_protocols TLSv1.2 TLSv1.3;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p><strong>OSP-RTMP:</strong>  This step is only needed when configuring OSP-RTMP to work with OSP-Proxy.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Edit the /usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf file</p></li>
+<li><p>Replace the following line with a list of allow statements for each IP address of OSP-Proxy that will be accessing the RTMP Server’s HLS files</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># allow &lt;ip of proxy&gt;;</span>
+</pre></div>
+</div>
+<p>to (example)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow</span> <span class="mf">23.10.1.34</span><span class="p">;</span>
+<span class="n">allow</span> <span class="mf">23.10.1.35</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Edit the /usr/local/nginx/conf/custom/osp-rtmp-custom-server.conf if using SSL/TLS on your OSP-Core service</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">rtmp</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">server</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Comment out the following line:
+<code class="docutils literal notranslate"><span class="pre">listen</span> <span class="pre">5999</span> <span class="pre">default_server;</span></code></p></li>
+<li><p>Uncomment the following lines and change the information for your TLS/SSL Certificate</p></li>
+</ul>
+<blockquote>
+<div><p>Note: The port will remain as 5999</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># listen 5999 ssl http2 default_server;</span>
+<span class="c1"># ssl_certificate /etc/letsencrypt/live/osp.example.com/fullchain.pem;</span>
+<span class="c1"># ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;</span>
+<span class="c1"># ssl_protocols TLSv1.2 TLSv1.3;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p><strong>OSP-Edge:</strong> This step is only needed if you are using an external OSP-Edge Service or plan on continuing to use one</p></li>
+</ol>
+<ul class="simple">
+<li><p>Edit the /usr/local/nginx/conf/custom/osp-edge-custom-allowedpub.conf file</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">edge</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">allowedpub</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Replace the following line and add the IP Addresses of all OSP-RTMP Instances
+<code class="docutils literal notranslate"><span class="pre">#allow</span> <span class="pre">publish</span> <span class="pre">CHANGEME;</span></code>
+to (example)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow</span> <span class="n">publish</span> <span class="mf">23.10.2.2</span><span class="p">;</span>
+<span class="n">allow</span> <span class="n">publish</span> <span class="mf">23.10.2.3</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Edit /usr/local/nginx/conf/custom/osp-edge-custom-nginxstat.conf</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">edge</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">nginxstat</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Replace the following line and add the IP addresses of all of your OSP-Core Instances
+<code class="docutils literal notranslate"><span class="pre">#allow</span> <span class="pre">CHANGEME;</span></code>
+to (example)</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">allow</span> <span class="mf">23.10.3.2</span><span class="p">;</span>
+<span class="n">allow</span> <span class="mf">23.10.3.3</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Restart the nginx-osp service on each server</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">nginx</span><span class="o">-</span><span class="n">osp</span>
+</pre></div>
+</div>
+</section>
+<section id="x-to-0-8-x">
+<h2>0.8.x to 0.8.x<a class="headerlink" href="#x-to-0-8-x" title="Permalink to this headline"></a></h2>
+<ol class="arabic simple">
+<li><p>Run the OSP config tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Select -&gt; 2 Upgrade…</p></li>
+<li><p>Select the component to upgrade (-&gt; 1 if single server installation)</p></li>
+</ol>
+</section>
+<section id="id1">
+<h2>0.7.x to 0.8.x<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h2>
+<blockquote>
+<div><p><strong>Note:</strong> SQLite is no longer supported, starting with OSP Version 0.8.0. Migrate to MySQL before upgrading or export a copy of the SQLite Database and reimport into a new MySQL DB while upgrading. (https://dbconvert.com/sqlite/mysql/)</p>
+</div></blockquote>
+<ol class="arabic simple">
+<li><p>Perform Git Pull on your OSP directory</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /opt/osp
+sudo git pull
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Run the 0.8.0.sh upgrade prep script</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo bash /opt/osp/setup/upgrade/0.8.0.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP config tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Install -&gt; 1: Install OSP - Single Server</p></li>
+<li><p>If prompted, reenter your OSP Ejabberd Chat Domain</p></li>
+<li><p>Exit the OSP Config Tool after completed</p></li>
+<li><p>Review the OSP config.py and copy your dbLocation Information from the config.py.old</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cat /opt/osp/conf/config.py.old
+sudo nano /opt/osp/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Review any SSL/TLS Certificate Reinstalls needed for Nginx</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">nginx</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Restart Ejabberd</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">ejabberd</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Restart OSP</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">osp</span><span class="o">.</span><span class="n">target</span>
+</pre></div>
+</div>
+</section>
+<section id="resetting-db-migrations">
+<h2>Resetting DB Migrations<a class="headerlink" href="#resetting-db-migrations" title="Permalink to this headline"></a></h2>
+<p>In some instances, when upgrading you may receive an error about duplicate columns existing.  If this occurs, you can reset the Flask-Migrate settings to allow the system to perform a reset upgrade.</p>
+<p>1: Delete the migrations directory</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">rm</span> <span class="o">-</span><span class="n">rf</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">osp</span><span class="o">/</span><span class="n">migrations</span>
+</pre></div>
+</div>
+<p>2: Open the DB using a Database tool (mysql for mysql-server or sqlite3 for sqllite)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">mysql</span>
+</pre></div>
+</div>
+<p>3: Select the OSP Database</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">use</span> <span class="n">osp</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>4: Drop the Alembic Versions Table</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">drop</span> <span class="n">table</span> <span class="n">alembic_version</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>5: Exit and Rerun a Database Upgrade</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">exit</span><span class="p">;</span>
+<span class="n">sudo</span> <span class="n">bash</span> <span class="o">/</span><span class="n">opt</span><span class="o">/</span><span class="n">osp</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">config</span><span class="o">.</span><span class="n">sh</span> <span class="n">upgrade_db</span>
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="install.html" class="btn btn-neutral float-left" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="tweaks.html" class="btn btn-neutral float-right" title="Tweaks" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Open Streaming Platform.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

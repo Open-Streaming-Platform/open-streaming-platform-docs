@@ -7,14 +7,26 @@ Welcome to Open Streaming Platform's documentation!
 ===================================================
 
 .. toctree::
-   :maxdepth: 3
-   :caption: Contents:
+   :maxdepth: 2
+   :caption: Overview:
    
-   about.md
-   repo.md
-   attribution.md
-   install.md
+   overview/about.md
+   overview/repo.md
+   overview/attribution.md
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Installation:
+
+   install/install.md
+   install/upgrades.md
+   install/tweaks.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Usage:
+
+   usage/streaming.md
 
 Indices and tables
 ==================

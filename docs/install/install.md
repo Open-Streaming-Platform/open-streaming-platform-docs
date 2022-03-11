@@ -629,10 +629,427 @@ quit;
 6. Follow the steps for Setting up a New MySQL install, starting at Step 2
 7. On the Insital Setup Wizard, Restore your Database Per the Steps under Restore Above.
 
-## Let's Encrypt Setup
+## Chat (XMPP)
+Beginning with OSP v0.7.0, Chat has been moved to an XMPP based system using ejabberd. Channel chatrooms now maintain a temporary history and can be accessed by Guests, if configured.
+
+### Installation
+
+#### Single Server
+By default, OSP will automatically install and configure XMPP components for use during install or upgrade to versions 0.7.0 or above. During the upgrade process, you will be prompted to enter the OSP Site Address. This address must match the OSP Site Address (Typically the OSP Fully Qualified Domain Name (FQDN) or IP Address of OSP) Failure to enter the correct address will cause the Chat system to not function properly.
+If you must change your OSP Site Address, this change must also be made to the ejabberd.yml configuration file and ejabberd restarted.
+You can find the ejabberd.yml file in ```/usr/local/ejabberd/conf/ejabberd.yml``` and edit the following lines:
+*Line 17-19*
+```yaml
+hosts:
+- localhost
+- CHANGEME <---Your OSP Site Address
+```
+*Line 167-173*
+```yaml
+host_config:
+"CHANGEME": <---Your OSP Site Address
+auth_method:
+- external
+- anonymous
+allow_multiple_connections: true
+anonymous_protocol: login_anon
+```
+```bash
+sudo systemctl restart ejabberd
+```
+OSP will also automatically set the ownership for each created OSP Channel and set the Channel Owner to Admin/Owner for the XMPP channel on start of the OSP service. If you have an issue with ownership, it is recommended to restart OSP to perform an XMPP Rebuild.
+
+#### External Server
+> Supported on versions >= 0.7.9
+{.is-info}
+Ejabberd can be configured to run an an external service. However, some manual changes must be made to allow it to operate with OSP properly.
+To setup an external ejabberd server, do the following:
+1. Install ejabberd on a separate server
+```bash
+sudo wget -O "/tmp/ejabberd-20.04-linux-x64.run" "https://www.process-one.net/downloads/downloads-action.php?file=/20.04/ejabberd-20.04-linux-x64.run"
+chmod +x /tmp/ejabberd-20.04-linux-x64.run
+/tmp/ejabberd-20.04-linux-x64.run ----unattendedmodeui none --mode unattended --prefix /usr/local/ejabberd --cluster 0
+```
+2. Create the conf directory and copy the ejabberd configuration yml, inetrc, and auth_osp.py from the OSP Repo to the directory
+```bash
+sudo mkdir /usr/local/ejabberd/conf
+wget -O "/usr/local/ejabberd/conf/ejabberd.yml" "https://gitlab.com/osp-group/flask-nginx-rtmp-manager/-/raw/master/installs/ejabberd/setup/ejabberd.yml"
+wget -O "/usr/local/ejabberd/conf/inetrc" "https://gitlab.com/osp-group/flask-nginx-rtmp-manager/-/raw/master/installs/ejabberd/setup/inetrc"
+wget -O "/usr/local/ejabberd/conf/auth_osp.py" "https://gitlab.com/osp-group/flask-nginx-rtmp-manager/-/raw/master/installs/ejabberd/setup/auth_osp.py"
+```
+3. Edit the /usr/local/ejabberd/conf/ejabberd.yml file and update the fields based on your configuration
+**Line 17-19**: Set CHANGEME to your OSP's FQDN
+```
+hosts:
+- localhost
+- OSP.example.com
+```
+**Line 43-53**: Change ip to "::"
+```
+port: 5443
+ip: "::"
+module: ejabberd_http
+tls: true
+request_handlers:
+/admin: ejabberd_web_admin
+/api: mod_http_api
+/bosh: mod_bosh
+/captcha: ejabberd_captcha
+/upload: mod_http_upload
+/ws: ejabberd_http_ws
+```
+**Line 55-65**: Change ip to "::"
+```
+port: 5280
+ip: "::"
+module: ejabberd_http
+request_handlers:
+/admin: ejabberd_web_admin
+/api: mod_http_api
+/bosh: mod_bosh
+/captcha: ejabberd_captcha
+/upload: mod_http_upload
+/ws: ejabberd_http_ws
+/.well-known/acme-challenge: ejabberd_acme
+```
+**Line 77-83**: Change ip to "::"
+```
+port: 4560
+ip: "::"
+module: ejabberd_xmlrpc
+access_commands:
+admin:
+commands: all
+options: []
+```
+**Line 87-96**: Add the IP Address to your OSP Instances in the ip block
+```
+acl:
+local:
+user_regexp: ""
+loopback:
+ip:
+- 127.0.0.0/8
+- ::1/128
+- YOUR OSP IP HERE
+admin:
+user:
+- "admin@localhost"
+```
+**Line 164**: Change the location of the auth_osp.py file to match below
+```
+extauth_program: "/usr/bin/python3 /usr/local/ejabberd/conf/auth_osp.py"
+```
+**Line 167-173**: Set CHANGEME to your OSP's FQDN
+```
+host_config:
+"OSP.example.com":
+auth_method:
+- external
+- anonymous
+allow_multiple_connections: true
+anonymous_protocol: login_anon
+```
+4. Install Python Requirements
+```bash
+sudo apt-get install python3-pip
+sudo pip3 install requests
+```
+5. Edit the /usr/local/ejabberd/conf/auth_osp.py file
+**Line 4-5**: Change the protocol and ospAPIServer values to match your OSP Instance
+```
+protocol = "http"
+ospAPIServer = "OSP.example.com"
+```
+6. Copy the ejabberd SystemD file
+```bash
+sudo cp /usr/local/ejabberd/bin/ejabberd.service /etc/systemd/system/ejabberd.service
+sudo systemctl daemon-reload
+sudo systemctl enable ejabberd
+sudo systemctl start ejabberd
+```
+7. Configure the local admin account with a password. Do not change the localadmin part
+```bash
+sudo /usr/local/ejabberd/bin/ejabberdctl register admin localhost YOURADMINPASSWORD
+```
+8. Install Nginx to reverse proxy the XMPP Bosh Port
+```
+sudo apt-get install nginx
+```
+9. Edit the default Nginx site file for the reverse proxy and add the following in the server directive block
+```
+sudo vi /etc/nginx/sites-available/default
+```
+```
+location /http-bind/ { # BOSH XMPP-HTTP
+proxy_pass http://localhost:5280/bosh;
+proxy_set_header Host $host;
+proxy_set_header X-Forwarded-For $remote_addr;
+proxy_redirect off;
+proxy_buffering off;
+proxy_read_timeout 65s;
+proxy_send_timeout 65s;
+keepalive_timeout 65s;
+tcp_nodelay on;
+}
+```
+10. Restart the Nginx Service
+```bash
+sudo systemctl restart nginx
+```
+11. On the OSP Server, update the ejabberd admin password and add the ejabberdServer variable to the /opt/osp/conf/config.py file
+```bash
+sudo vi /opt/osp/conf/config.py
+```
+```python
+# EJabberD Configuration
+ejabberdAdmin = "admin"
+ejabberdPass = "YOURADMINPASSWORD"
+ejabberdHost = "localhost"
+ejabberdServer = "ejabberd.example.com"
+```
+12. Restart the OSP Server
+```bash
+sudo systemctl restart osp.target
+```
+
+### Network Configuration
+OSP's XMPP configuration requires the following open ports for chat to function:
+- TCP/5222: Used for ejabberd Client to Server connections
+- TCP/5269: Used for ejabberd Server to Server connections
+- TCP/5443: External Server Jabber HTTPS-BOSH connection *External Server Only*
+- TCP/5280: External Server Jabber HTTP-BOSH connection *External Server Only*
+- TCP/4560: External Server XML-RPC Server Control *External Server Only*
+
+### OSP Configuration
+XMPP Channels are configured on a channel by channel basis. You can find the settings under Your Channels -> Chat
+![2020-06-07_19_53_27-osp_demo_-_user_channels_page_and_11_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_19_53_27-osp_demo_-_user_channels_page_and_11_more_pages_-_personal_-_microsoft​_edge.png)
+Channel configuration allows you to define who is allowed to chat, how chat is managed, and who can manage it.
+- **Room Title:** Name of Room, displayed to XMPP Chat Clients
+- **Description:** Room description, displayed to XMPP Chat Clients
+- **Moderated:** Only Users Identified as Participants may Chat
+- **Allow guests to join room:** Allow Unauthenticated Guest Users to Join the Chat
+- **Allow guests to chat:** Automatically set Unauthenticated Guest Users as Participants
+You may also define automatic moderators for your channel in the Add Moderator section.
+
+### Usage
+The Chat Window is a basic display of conversations and moderation controls for users and admins. You can view who is in a channel, view their profile, or control basic functions such as ban lists or channel roles.
+![2020-06-07_20_04_07-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_04_07-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png)
+All users are set as one the following roles:
+- **Moderator**: Able to control the room and has access to all moderator controls
+- **Participant**: Able to Chat in the room (ie: has voice)
+- **Guest**: Able to view Chat in the room, but can not chat.
+Any role changes made by a moderator are set as permanent and will remain on joining / leaving a room.
+
+### User Options
+By clicking on a username in chat or in the User List, users and moderators are displayed options targeting that user.
+![2020-06-07_20_10_21-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_10_21-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png)
+
+### User Controls
+- **Profile**: Opens a Popup that displays the User's Bio and any Channels, Streams, Videos, or Clips they may own
+- **Mute**: Hides all chat from a user for your account. You will no longer see any messages from the user until you unmute them.
+
+### Mod Controls
+- **Kick**: Removes the user from the chatroom.
+- **Ban**: Removes the user from the chatroom and flags their username as banned.
+- **Change Role / Set as Moderator**: Sets the User to have Moderator Controls
+- **Change Role / Set as Participant**: Sets the User to be a Participant (Able to Chat if Channel is set to Moderated)
+- **Change Role / Set as Guest**: Sets the User to be a Guest (Can't Chat if Channel is set to Moderated)
+- **Channel Voice Controls / Voice**: Temporarily grants Participant Status
+- **Channel Voice Controls / Devoice**: Temporarily removes Participant Status
+
+### Authentication
+Each User maintains an XMPP token which is required to authenticate to the Chat Server. This is handled by OSP by default, but the token can also be used to authenticate using an XMPP client. To find you XMPP token, you can go to your user settings and copy the XMPP token at the bottom of the page.
+![2020-06-07_20_23_32-osp_test_3_-_user_settings_and_12_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_23_32-osp_test_3_-_user_settings_and_12_more_pages_-_personal_-_microsoft​_edge.png)
+In addition to user XMPP tokens, each channel also maintains a XMPP token to be used when a Channel is set to be protected. In these instances, users may use the Channel XMPP Token to join the Chatroom using an external client.
+![2020-06-07_20_25_05-osp_demo_-_user_channels_page_and_12_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_25_05-osp_demo_-_user_channels_page_and_12_more_pages_-_personal_-_microsoft​_edge.png)
+
+### Two Way Integration with Other Chat Clients
+(Provided by djetaine on Discord)
+
+Using Matterbridge, you can integrate your OSP Instance with multiple chat clients like Discord, IRC, Twitch, Telegram, etc.
+Each platform should have its own "Bot" relay account that you will need to create.
+For additional information and configuration instructions visit the [Matterbridge Wiki](https://github.com/42wim/matterbridge/wiki/) directly.
+
+#### Installation - OSP
+To facilitate certificate retrieval through the default nginx conf file will need to be modified.
+If you cannot connect after you finish the installation, look at the ejabberd logs. In some instances you will need to manually create your cert files which can be done using the instructions under "Troubleshooting"
+Create a backup folder and make a copy of your conf file
+```
+mkdir ~/backups
+cp /usr/local/nginx/conf/nginx.conf ~/backups/nginx.conf
+```
+Open an editor to modify your conf
+```
+nano /usr/local/nginx/conf/nginx.conf
+```
+Add the following to your nginx conf file below the 443 server block
+```
+##Allow for ejabberd acme-challenge
+server {
+listen 80;
+server_name conference.subdomain.domain.tld;
+location / {
+proxy_pass http://localhost:5280;
+}
+}
+server {
+listen 80;
+server_name proxy.subdomain.domain.tld;
+location / {
+proxy_pass http://localhost:5280;
+}
+}
+server {
+listen 80;
+server_name pubsub.subdomain.domain.tld;
+location / {
+proxy_pass http://localhost:5280;
+}
+}
+```
+Create DNS Records on your domain registrar for each of the subdomains required by ejabberd.
+proxy.subdomain, pubsub.subdomain, conference.subdomain
+Perform an nslookup or ping to very name resolution, restart osp and ejabberd then verify connectivity
+```
+sudo systemctl restart osp.target
+sudo systemctl restart ejabberd
+cat /usr/local/ejabberd/logs/ejabberd.log
+```
+If the certificate retrieval was successful, you will see success messages for the certificate. Don't worry about the local host warnings. If you see warnings for your FQDN, verify that your DNS entries are valid.
+![enter image description here](https://i.imgur.com/yihxN8W.png)
+Allow ejabberd traffic through your firewall. If you are hosting from home, be sure to port forward to your OSP host.
+```
+sudo ufw allow 5222/tcp
+sudo ufw allow 5269/tcp
+sudo ufw allow 5280/tcp
+```
+You can quickly test the external connectivity with an online xmpp client like conversejs
+Get your xmpp username and password from your OSP profile settings page at the bottom, then login at [https://conversejs.org/fullscreen.html](https://conversejs.org/fullscreen.html)
+If you can connect, move forward.
+
+#### Install Matterbridge
+Matterbridge will run on many different operating systems and container platforms. In this case we will focus on a digital ocean droplet running ubuntu minimal. See the github page for more information on other installations.
+Get your instance of ubuntu up and running
+Create Matterbridge user, download binaries, set permissions and create the directory
+```
+sudo adduser --system --no-create-home --group matterbridge
+sudo wget https://github.com/42wim/matterbridge/releases/download/v1.22.3/matterbridge-1.22.3-linux-64bit -O /usr/bin/matterbridge
+sudo chmod 755 /usr/bin/matterbridge
+sudo mkdir /etc/matterbridge
+```
+You will now create your configuration file. There are a lot of integrations available but this document will focus on Twitch and Discord. More config help can be found in the Matterbridge Wiki
+For discord, you will need to create a bot and get it's auth token. [Create a Discord Bot](https://github.com/42wim/matterbridge/wiki/Discord-bot-setup)
+Get your ServerID and Channel ID by turning on developer mode then right clicking each to copy the ID.
+For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to https://twitchapps.com/tmi to get your oauth password. You need the whole thing, including the oauth:
+![enter image description here](https://i.imgur.com/2qzKSH2.png)
+Open an editor to create the config
+```
+sudo nano /etc/matterbridge/matterbridge.toml
+```
+You may copy this config file entering your own settings for FQDN, token, server, etc.
+```
+[discord.mydiscord]
+Token="yourDiscordBotsToken"
+Server="YourServerID"
+RemoteNickFormat="{PROTOCOL}-**<{NICK}>** "
+[irc.twitch]
+#Add the oauth token here you got from https://twitchapps.com/tmi/
+Password="oauth:SomeLettersAndNumbers"
+Nick="YourTwitchBotsName"
+Server="irc.twitch.tv:6667"
+UseTLS=false
+RemoteNickFormat="{PROTOCOL}-[{NICK}] "
+[xmpp.myxmpp]
+Server="fqdn.of.your.OSP.Server:5222"
+#Jid your userid
+Jid="OSPUserName@yourserver.tld"
+Password="PasswordFromUserSettings"
+Muc="conference.your.fqdn"
+Nick="YourFriendlyUserName"
+RemoteNickFormat="{PROTOCOL}-[{NICK}] "
+[[gateway]]
+name="gateway1"
+enable=true
+[[gateway.inout]]
+account="irc.twitch"
+channel="#YourTwitchChannel"
+[[gateway.inout]]
+account="xmpp.myxmpp"
+channel="YourOSPChannelUID"
+[[gateway.inout]]
+account="discord.mydiscord"
+channel="ChannelNameYouWantToSendTo"
+```
+Test your configuration by starting matterbridge.
+```
+/usr/bin/matterbridge -debug -conf /etc/matterbridge/matterbridge.toml
+```
+If all went well, create a service for matterbridge to run as.
+```
+sudo nano /etc/systemd/system/matterbridge.service
+```
+Paste the following and save the file
+```
+[Unit]
+Description=matterbridge
+After=network.target
+[Service]
+ExecStart=/usr/bin/matterbridge -conf /etc/matterbridge/matterbridge.toml
+User=matterbridge
+Group=matterbridge
+[Install]
+WantedBy=multi-user.target
+```
+Enable and run the service
+```
+sudo systemctl daemon-reload
+sudo systemctl enable matterbridge
+sudo systemctl start matterbridge
+```
+Set the service to run at startup
+```
+sudo systemctl enable matterbridge
+```
+You should now have a fully integrated chat with Twitch, OSP and Discord.
+
+#### Troubleshooting
+The two files that will be most important are the ejabberd log and the debug of the matterbridge service.
+OSP Server
+```
+/usr/local/ejabberd/logs/ejabberd.log
+```
+Matterbridge Server re-run the matterbridge application with the -debug flag
+```
+/usr/bin/matterbridge -debug -conf /etc/matterbridge/matterbridge.toml
+```
+---
+
+#### Manually configuring certificates if auto creation is not functioning
+If the automated acme-challenge isnt working for one reason or another, you can create a cert and assign it manually. Run this command replacing subdomain.domain.tld with your fqdn
+```
+sudo certbot certonly --manual -d conference.subdomain.domain.tld -d proxy.subdomain.domain.tld -d pubsub.subdomain.domain.tld -d subdomain.domain.tld --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
+```
+Create txt records on your dns when asked. You will require a txt record for each subdomain.
+Combine the full chain you create with the private key
+```
+cat etc/letsencrypt/live/yoursite/privkey.pem /etc/letsencrypt/live/yoursite/fullchain.pem > ~/combined.pem
+```
+Move your newly created combined pem file to a better location (something like /etc/ssl/ejabberd)
+Uncomment the following lines in /usr/local/ejabberd/conf/ejabberd.yml
+```
+certfiles:
+```
+Add directly beneath
+```
+- /etc/ssl/ejabberd/combined.pem
+```
+Be SURE to line up your - /etc with the rest of the dashes in the yml file. YAML is very picky about spacing. It must tbe exact.
+
+#### Let's Encrypt Setup
 The focus of this guide will be to provide an example of how to setup SSL with LetsEncrypt and Certbot.
 For this example we are using a default install of OSP on Ubuntu 20.04 (or 18.04) LTS
-### Step one, install Certbot
+##### Step one, install Certbot
 Install certbot (running with Nginx) as described at https://certbot.eff.org/instructions
 Installion of certbot in short (for most systems) works with snap as follows:
 ```
@@ -645,7 +1062,7 @@ Verify certbot is installed:
 # certbot --version
 certbot 1.13.0
 ```
-### Create a location for certbot verification outside of the actual webroot
+##### Create a location for certbot verification outside of the actual webroot
 ```
 # mkdir /var/certbot
 # chmod 755 /var/certbot
@@ -675,9 +1092,9 @@ root html;
 }
 include /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf;
 ```
-### Restart Nginx
+##### Restart Nginx
 ```sudo systemctl restart nginx-osp```
-### Run certbot to request certs from LetsEncrypt
+##### Run certbot to request certs from LetsEncrypt
 ```
 # sudo certbot certonly --webroot -w /var/certbot -d <domain>
 ```
@@ -692,7 +1109,7 @@ version of this certificate in the future, simply run certbot
 again. To non-interactively renew *all* of your certificates, run
 "certbot renew"
 ```
-### Configure nginx-osp to use SSL and the certificates you have requested
+##### Configure nginx-osp to use SSL and the certificates you have requested
 Edit /usr/local/nginx/conf/custom/osp-custom-servers.conf and edit the section to similar to below:
 Remember to change your domain name and certificate location to match the step above.
 ```
@@ -703,7 +1120,7 @@ ssl_certificate /etc/letsencrypt/live/osp.example.com/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;
 ssl_protocols TLSv1.2 TLSv1.3;
 ```
-### Configure nginx-osp to do http to https redirect
+##### Configure nginx-osp to do http to https redirect
 Uncomment all lines in /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf to read as follows:
 ```
 server {
@@ -716,3 +1133,154 @@ Restart nginx.osp
 ```
 # sudo systemctl restart nginx-osp
 ```
+
+## HAProxy Load Balancing
+
+### Pre-requisites
+This guide is designed for people running OSP Split server and **not** single server installations. This guide assumes that you currently have a working setup with at least 1 core server.
+Tested working on Ubuntu 20.04 (LTS) on 2021.10.11. VPS Spec: 2GB RAM, 1 vCPU and 50GB Disk. Cloud Provider: Digital Ocean. For SSL installation your FQDN must be pointing at your HAProxy Server IP Address.
+To Install, do the following:
+```
+apt-get update
+apt-get upgrade
+apt install -y haproxy
+apt install -y certbot
+```
+After installing run haproxy -v to confirm installed and working as intended. You should get an output like:
+HA-Proxy version 2.0.13-2ubuntu0.3 2021/08/27 - https://haproxy.org/
+
+### Setup Config File
+Once the install is done you can then configure the Config file
+```
+nano /etc/haproxy/haproxy.cfg
+```
+Under the defaults section, enter the following lines, replacing words (and the dashes) with your own information.
+```
+frontend --name to define frontend http--
+# Define Port to Bind To and set the mode
+bind :80
+bind :::80
+mode http
+# Used to redirect HTTP Requests to HTTPS
+# http-request redirect scheme https unless { ssl_fc }
+# Enable this if you want to view stats
+# stats uri /haproxy?stats
+# Sets the default backend for servers
+default_backend --name to define below backend (MUST MATCH)--
+# Certbot SSL Installation
+acl is_certbot path_beg /.well-known/acme-challenge/
+use_backend backend-certbot if is_certbot
+#frontend --name to define frontend https--
+# bind :443 ssl crt /etc/haproxy/ssl/
+# bind :::443 ssl crt /etc/haproxy/ssl/
+# mode http
+# ACL for detecting Let's Encrypt validtion requests
+# acl is_certbot path_beg /.well-known/acme-challenge/
+# use_backend backend-certbot if is_certbot
+# default_backend --name to define below backend (MUST MATCH)--
+backend --name to define below backend (MUST MATCH ABOVE default_backed)--
+mode http
+balance leastconn
+server --yourservername-- --server internal or public ip--:80 check inter 5s rise 3 fall 2
+backend backend-certbot
+server letsencrypt 127.0.0.1:9080
+```
+Once that is done run
+```
+systemctl reload haproxy
+```
+The above config will get you running with HTTP. You must make sure that the default_backend under http and https match the backend name in the non backend-certbot section or haproxy wont start. You can change the server checks yourself but the above will check each core server every 5 seconds for a response. It it fails twice it will not use that server in the balancer.
+If you want to be able to view your haproxy stats you can uncomment line 9 above and run
+```
+systemctl reload haproxy
+```
+You can then go to http://haproxyipaddress/fqdn/haproxy?stats or http://fqdn/haproxy?stats
+
+### SSL Setup
+In order to setup SSL Using LetsEncrypt your FQDN must be pointing to the public IP address of your haproxy server. You also need to have certbot installed.
+Run the following, replacing mydomain.com with your FQDN and me@mydomain.com with your email address. You should get a message saying that your certificate and chain have been saved etc.
+```
+certbot certonly --standalone --preferred-challenges http --http-01-address 127.0.0.1 --http-01-port 9080 -d mydomain.com --email me@mydomain.com --agree-tos --non-interactive
+```
+We then need to combine those files into one for haproxy.
+```
+sudo nano /etc/haproxy/prepareLetsEncryptCertificates.sh
+```
+Then add the following:
+```
+#!/bin/bash
+# Loop through all Let's Encrypt certificates
+for CERTIFICATE in `find /etc/letsencrypt/live/* -type d`; do
+CERTIFICATE=`basename $CERTIFICATE`
+# Combine certificate and private key to single file
+cat /etc/letsencrypt/live/$CERTIFICATE/fullchain.pem /etc/letsencrypt/live/$CERTIFICATE/privkey.pem > /etc/haproxy/ssl/$CERTIFICATE.pem
+done
+```
+Create the SSL Directory
+```
+mkdir /etc/haproxy/ssl
+```
+Execute all the things!
+```
+chmod +x /etc/haproxy/prepareLetsEncryptCertificates.sh
+sh /etc/haproxy/prepareLetsEncryptCertificates.sh
+```
+If the above has all gone well you should now be able to edit your haproxy config file and enable SSL by uncommenting the following lines in the config below (copied from above):
+Line 7 - if you want to force SSL
+Lines 16-19
+Lines 21-23
+```
+frontend --name to define frontend http--
+# Define Port to Bind To and set the mode
+bind :80
+bind :::80
+mode http
+# Used to redirect HTTP Requests to HTTPS
+# http-request redirect scheme https unless { ssl_fc }
+# Enable this if you want to view stats
+# stats uri /haproxy?stats
+# Sets the default backend for servers
+default_backend --name to define below backend (MUST MATCH)--
+# Certbot SSL Installation
+acl is_certbot path_beg /.well-known/acme-challenge/
+use_backend backend-certbot if is_certbot
+#frontend --name to define frontend https--
+# bind :443 ssl crt /etc/haproxy/ssl/
+# bind :::443 ssl crt /etc/haproxy/ssl/
+# mode http
+# ACL for detecting Let's Encrypt validtion requests
+# acl is_certbot path_beg /.well-known/acme-challenge/
+# use_backend backend-certbot if is_certbot
+# default_backend --name to define below backend (MUST MATCH)--
+backend --name to define below backend (MUST MATCH ABOVE default_backed)--
+mode http
+balance leastconn
+server --yourservername-- --server internal or public ip--:80 check inter 5s rise 3 fall 2
+backend backend-certbot
+server letsencrypt 127.0.0.1:9080
+```
+
+### Automatic Certificate Renewals and File Merging
+Create a script to automate the certbot renewal and then merge the files and reload haproxy.
+```
+sudo nano /etc/haproxy/renewLetsEncryptCertificates.sh
+```
+Then Add:
+```
+#!/bin/bash
+certbot renew --standalone --preferred-challenges http --http-01-address 127.0.0.1 --http-01-port 9080 --post-hook "/etc/haproxy/prepareLetsEncryptCertificates.sh && systemctl reload haproxy.service" --quiet
+```
+And make it executable:
+```
+chmod +x /etc/haproxy/renewLetsEncryptCertificates.sh
+```
+Create a cronjob to get the script to check for certificate renewals and run the certificate merge:
+```
+crontab -e
+0 0 * * * /bin/sh /etc/haproxy/renewLetsEncryptCertificates.sh
+```
+Job done!
+
+### Lock Down Stats Page
+If you want the stats page to be active then haproxy have a good blog post on how to lock it down and also what all of the metrics mean below:
+https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/

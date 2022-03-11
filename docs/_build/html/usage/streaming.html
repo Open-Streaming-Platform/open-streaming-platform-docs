@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Streaming &mdash; Open Streaming Platform  documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="Tweaks" href="../install/tweaks.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+            <a href="../index.html" class="icon icon-home"> Open Streaming Platform
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Overview:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../overview/about.html">About Open Streaming Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/repo.html">Repository Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../overview/attribution.html">Attribution</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Installation:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install/install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/upgrades.html">Upgrades</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../install/tweaks.html">Tweaks</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Usage:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Streaming</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#stream-url">Stream URL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#stream-keys">Stream Keys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#osp-nginx-rtmp-default-configuration">OSP Nginx-RTMP Default Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#latency">Latency</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#transcoding">Transcoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#rtmp-streamer-software-configurations">RTMP Streamer Software Configurations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#open-broadcaster-software">Open Broadcaster Software</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ffmpeg">ffMPEG</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#stream-from-a-local-camera-without-a-ui">Stream from a local camera without a UI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stream-from-a-video-file">Stream from a video file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#restream-from-another-rtmp-stream">Restream from another RTMP Stream</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing-osp-server">Testing OSP server</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Open Streaming Platform</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home"></a> &raquo;</li>
+      <li>Streaming</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/usage/streaming.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="streaming">
+<h1>Streaming<a class="headerlink" href="#streaming" title="Permalink to this headline"></a></h1>
+<section id="stream-url">
+<h2>Stream URL<a class="headerlink" href="#stream-url" title="Permalink to this headline"></a></h2>
+<p>In order to stream to OSP, a channel with a valid stream key is needed. After creating a channel, the streaming program must be set to the corresponding URL: <code class="docutils literal notranslate"><span class="pre">rtmp://$IPorFQDN/stream</span></code></p>
+</section>
+<section id="stream-keys">
+<h2>Stream Keys<a class="headerlink" href="#stream-keys" title="Permalink to this headline"></a></h2>
+<p>You will find your stream key at the bottom of the Channel configuration page as follows:</p>
+<p>Note that only registered users with the streamer role are able to stream to OSP.</p>
+</section>
+<section id="osp-nginx-rtmp-default-configuration">
+<h2>OSP Nginx-RTMP Default Configuration<a class="headerlink" href="#osp-nginx-rtmp-default-configuration" title="Permalink to this headline"></a></h2>
+<p>OSP is configured by default with the following settings:</p>
+<ul class="simple">
+<li><p><strong>hls_framents</strong>: 1 second</p></li>
+<li><p><strong>hls_playlist_length</strong>: 10 seconds</p></li>
+</ul>
+<p>Due to these settings, the key to creating low delay streams is to ensure your Keyframe Interval for your RTMP Source is set to 1 second.</p>
+<p>Alterations to the the Nginx-RTMP configuration can be made by editing the osp-rtmp.conf file in /usr/local/nginx/conf. More information on the Nginx-RTMP directives can be found at https://github.com/arut/nginx-rtmp-module/wiki/Directives</p>
+</section>
+<section id="latency">
+<h2>Latency<a class="headerlink" href="#latency" title="Permalink to this headline"></a></h2>
+<p>OSP uses HLS to serve RTMP streams to clients. This brings a certain latency by design. The default configuration of nginx is fine-tuned to reduce the latency as far as possible while providing stable HLS streams. For this configuration it is imporant that the encoder sends a keyframe every second! The latency should be 4.5 to 5 seconds.</p>
+<p>If streams are buffering, it’s most likely because of a suboptimal network connection. In this case, increase the <code class="docutils literal notranslate"><span class="pre">hls_playlist_length</span></code> in the <code class="docutils literal notranslate"><span class="pre">osp-rtmp.conf</span></code>. The latency will increase with a longer playlist length.</p>
+<p>RTMP capable players (e.g. VLC) can access the RTMP stream directly. The URL is available in the share dialog below the stream. The latency of the RTMP stream should be 1 to 2 seconds.</p>
+</section>
+<section id="transcoding">
+<h2>Transcoding<a class="headerlink" href="#transcoding" title="Permalink to this headline"></a></h2>
+<p>Transcoding or adaptive streaming is possible with OSP. It can be enabled globally in the admin settings. However, this feature uses the CPU of the server to re-encode the streams and requires a lot of CPU power. It’s possible to utilize GPUs instead by changing the encoder used by ffmpeg in the osp-rtmp.conf. Enabling transcoding will increase the stream latency. It may be necessary to increase the playlist length.</p>
+<p>By default, nginx has been configured to transcode 1080p, 720p, 480p, &amp; 360p. You can optimize how streams are transcoded by editing the osp-rtmp.conf file and following the instructions here.</p>
+</section>
+<section id="rtmp-streamer-software-configurations">
+<h2>RTMP Streamer Software Configurations<a class="headerlink" href="#rtmp-streamer-software-configurations" title="Permalink to this headline"></a></h2>
+<p>Below is a listing of tested configurations for RTMP Source Configurations which produce the lowest delay (around 5s delay)</p>
+<section id="open-broadcaster-software">
+<h3>Open Broadcaster Software<a class="headerlink" href="#open-broadcaster-software" title="Permalink to this headline"></a></h3>
+<ul class="simple">
+<li><p>Medium Quality (720p) / Low Delay Setup</p></li>
+</ul>
+</section>
+<section id="ffmpeg">
+<h3>ffMPEG<a class="headerlink" href="#ffmpeg" title="Permalink to this headline"></a></h3>
+<p>ffmpeg can be used to stream directly to OSP in various situations which can add additional flexibility that is not available using another client software:</p>
+<section id="stream-from-a-local-camera-without-a-ui">
+<h4>Stream from a local camera without a UI<a class="headerlink" href="#stream-from-a-local-camera-without-a-ui" title="Permalink to this headline"></a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ffmpeg -re -f video4linux2 -i $VideoDeviceLocation -vcodec libx264 -vprofile baseline -acodec aac -strict -2 -f flv rtmp://$OSPIP/stream/$StreamKey
+</pre></div>
+</div>
+</section>
+<section id="stream-from-a-video-file">
+<h4>Stream from a video file<a class="headerlink" href="#stream-from-a-video-file" title="Permalink to this headline"></a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ffmpeg -re -i &quot;$file&quot; -acodec copy -vcodec copy -f flv rtmp://$OSPIP/stream/$key
+</pre></div>
+</div>
+</section>
+<section id="restream-from-another-rtmp-stream">
+<h4>Restream from another RTMP Stream<a class="headerlink" href="#restream-from-another-rtmp-stream" title="Permalink to this headline"></a></h4>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ffmpeg -i $sourceStream -vcodec libx264 -vprofile baseline -acodec aac -strict -2 -f flv rtmp://$OSPIP/stream/$StreamKey
+</pre></div>
+</div>
+</section>
+<section id="testing-osp-server">
+<h4>Testing OSP server<a class="headerlink" href="#testing-osp-server" title="Permalink to this headline"></a></h4>
+<p>We can use ffmpg to test the streaming ability of an OSP server. Log into OSP with an account that has permission to stream, go to a channel (creating one if necessary), and get the stream key as described above.</p>
+<p>Next we need some media to play. We suggest <a class="reference external" href="http://bbb3d.renderfarming.net/download.html">Big Buck Bunny</a> as a wonderful test file.</p>
+<p>In a terminal, set environment variables for your filename, server, and key. Then ffmpeg can be used to stream your video to the OSP server. The RTMP format can not handle a sample rate of 48000, so we will use options in ffmpeg to downconvert it to 44100). For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>file=bbb_sunflower_1080p_30fps_normal.mp4
+fqdn=&lt;OSP-RTMP FQDN/IP&gt;
+key=REDACTED
+
+ffmpeg -re -i &quot;$file&quot; -acodec libmp3lame -ar 44100 -vcodec copy -f flv rtmp://$fqdn/stream/$key
+</pre></div>
+</div>
+<p>This should start streaming the video to the server. In order to verify everything is working as expected, use your browser to tune into the channel.</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../install/tweaks.html" class="btn btn-neutral float-left" title="Tweaks" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2022, Open Streaming Platform.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
