@@ -1,0 +1,826 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Installation &#8212; Open Streaming Platform  documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/alabaster.css" />
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <link rel="author" title="About these documents" href="about.html" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Attribution" href="attribution.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>OSP has been verified to work with the following requirements</p>
+<ul class="simple">
+<li><p>Ubuntu 18.04 or later, Debian 10 or later</p></li>
+<li><p>Python 3.7 or later</p></li>
+<li><p>MySQL 5.7.7 or later, or MariaDB &gt; 10.1, if not using SQLite</p></li>
+<li><p>SMTP Mail Server for Email Address Validation and Subscriptions</p></li>
+<li><p>FFMPEG 4 or greater</p></li>
+<li><p>Dual Core Processor at 2.4 Ghz</p></li>
+<li><p>4 GB RAM</p></li>
+<li><p>120 GB HDD Storage</p></li>
+<li><p>Upstream Bandwidth &gt; 35Mbps for 720p/30fps  Streams to 10 people &#64;  3500kbps bit rate</p></li>
+</ul>
+</section>
+<section id="install-open-streaming-platform">
+<h2>Install Open Streaming Platform<a class="headerlink" href="#install-open-streaming-platform" title="Permalink to this headline">¶</a></h2>
+<section id="script-install-single-server-osp-core-osp-rtmp-ejabberd-redis-mysql">
+<h3>Script Install - Single Server (OSP-Core, OSP-RTMP, Ejabberd, Redis, MySQL)<a class="headerlink" href="#script-install-single-server-osp-core-osp-rtmp-ejabberd-redis-mysql" title="Permalink to this headline">¶</a></h3>
+<ol class="arabic simple">
+<li><p>Clone the git repository</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://gitlab.com/Deamos/flask-nginx-rtmp-manager.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install the Config Tool Prerequisites (if not already installed)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dialog
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP Configuration Tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flask-nginx-rtmp-manager
+sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Option 1 - “Install…”</p></li>
+<li><p>Select Option 1 - “Install OSP - Single Server”</p></li>
+<li><p>During the install process, the Config Tool will ask for an Ejabberd Full Qualified Domain Name (FQDN). This should be the same as the public domain name which will be used to access OSP. This should be a valid DNS entry as it is used to configure Ejabberd’s Chat Domain and by default is used by the chat client to connect users to the XMPP chat system. IP addresses may not function properly.</p></li>
+<li><p>On completion, exit the OSP Config Tool.</p></li>
+<li><p>Review the values in the OSP /opt/osp/conf/config.py.</p></li>
+</ol>
+<blockquote>
+<div><p><strong><em>NOTE:</em></strong> secretKey and passwordSalt should be changed from their default values.</p>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /opt/osp/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Restart the OSP Core Workers</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart osp.target
+</pre></div>
+</div>
+<p>To test streaming on the server, see the “Testing OSP server” section of the <span class="xref myst">Streaming</span> page.</p>
+</section>
+<section id="script-install-split-server-install-osp-components-on-different-servers">
+<h3>Script Install - Split Server Install - OSP Components on Different Servers<a class="headerlink" href="#script-install-split-server-install-osp-components-on-different-servers" title="Permalink to this headline">¶</a></h3>
+<p>Starting with OSP version 0.8.0, OSP components can be split over multiple servers. This helps with spreading the load required for a busy OSP install with many viewers. In addition, splitting the components can be useful to set up load balancing by having multiple copies of the component and using a load balancer, such as HAproxy.
+To perform a Split Server Setup, please review the following requirements:</p>
+<ul class="simple">
+<li><p><strong>Componentaization</strong> - Multiple components can be installed on a single server to reduce cost. Doing so can also prevent needing some of the considerations in this list. For Example, if you consolidate OSP-Core and OSP-RTMP and do not require OSP-Edge Servers, you will not need Centralized storage as they</p></li>
+<li><p><strong>Centralized Storage</strong> - OSP requires some form of mounted centralized storage for Videos, Clips, &amp; Stream/Video Thumbnails. This can be accomplished easily by using an S3-based storage bucket and using s3fs to mount the bucket to the servers file systems. Another method would be a NFS mount in the require location. Below is the required drive mounts and locations</p></li>
+<li><p><strong>Mounts</strong></p></li>
+<li><p>/var/www/videos - OSP-Core, OSP-RTMP</p></li>
+<li><p>/var/www/stream-thumb - OSP-Core, OSP-RTMP</p></li>
+<li><p>/var/www/images - OSP-Core</p></li>
+<li><p><strong>SSL/TLS</strong> - If OSP Core systems use HTTPS with SSL/TLS certificates, certificates will also be needed for the Ejabberd, Edge, Proxy, or OSP-RTMP (Only if using Proxy) Servers to prevent issues with HTTP(s) mixed content.</p></li>
+<li><p><strong>MySQL &amp; Redis</strong> - the OSP Config Tool does not have an option for MySQL and Redis installs. It is recommended to be familar with their install and configuration prior to a Split Server Install
+In some instances, some services can be co-located on the same server. See rules below:</p></li>
+<li><p>OSP-Core, OSP-RTMP, Redis, ejabberd, and Database can exist on the same server</p></li>
+<li><p>OSP-Edge can not exist on the same server as OSP-RTMP</p></li>
+<li><p>OSP-Proxy can not exist on the same server as OSP-Edge, OSP-Core, OSP-RTMP, or ejabberd</p></li>
+</ul>
+<section id="recommended-install-order">
+<h4>Recommended Install Order<a class="headerlink" href="#recommended-install-order" title="Permalink to this headline">¶</a></h4>
+<p>Below is the recommended order of setting up split servers. This is due to some of the dependancies requires for some servers to function properly.</p>
+<ol class="arabic simple">
+<li><p>Centralized Storage - Have a server ready to connect to</p></li>
+<li><p>Ejabberd</p></li>
+<li><p>Redis</p></li>
+<li><p>Database</p></li>
+<li><p>OSP-Core</p></li>
+<li><p>OSP-RTMP</p></li>
+<li><p>OSP-Edge</p></li>
+<li><p>OSP-Proxy</p></li>
+</ol>
+</section>
+<section id="centralized-storage-mounting-use-with-osp-core-and-osp-rtmp">
+<h4><strong>Centralized Storage Mounting (Use with OSP-Core and OSP-RTMP)</strong><a class="headerlink" href="#centralized-storage-mounting-use-with-osp-core-and-osp-rtmp" title="Permalink to this headline">¶</a></h4>
+<p>These instructions are intended to be used <strong>after the OSP-Core and OSP-RTMP install processes</strong>. After installing the OSP components, it is recommended to determine and establish a central storage server setup on completion of component deployment.
+Due to the many possible configurations of using central, shared storage, it is impossible to cover a “best” method for doing so. For the purposes of this documentation, it is assumed that an S3-compatable bucket will be used and mounting is covered below using s3fs.
+<strong>DO NOT USE s3fs 1.86-1.</strong>
+<strong>A critical bug in caching can lead to mount failure of the s3 bucket, leading to loss of recordings. Currently the latest Ubuntu LTS (20.04) only has this version of s3fs available.</strong></p>
+<ol class="arabic simple">
+<li><p>Install s3fs</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get update <span class="o">&amp;&amp;</span> sudo apt-get install s3fs
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Create a password file. This will contain the S3 key and secret token:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span> S3KEY:S3TOKEN &gt; ~/.passwd-s3fs
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Set the permissions to secure the file</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>chmod <span class="m">600</span> ~/.passwd-s3fs
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Edit the Fuse Configurations to allow access by non-root users to files</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/fuse.conf
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Comment out the following line <code class="docutils literal notranslate"><span class="pre">user_allow_other</span></code></p></li>
+<li><p>Identify and write down the uid and gid of the www-data user. Example: <code class="docutils literal notranslate"><span class="pre">uid=33(www-data)</span> <span class="pre">gid=33(www-data)</span> <span class="pre">groups=33(www-data)</span></code></p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo -u www-data id
+</pre></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>Create the required stub locations:</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mkdir -p /var/www/videos
+sudo mkdir -p /var/www/images
+sudo mkdir -p /var/www/stream-thumb
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Mount the directories to the S3-compatible bucket using your S3 Credentials and the identified UID &amp; GID frm Step 6</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>s3fs &lt;space_name&gt; /var/www/videos -o <span class="nv">url</span><span class="o">=</span>&lt;s3 endpoint&gt; -o <span class="nv">use_cache</span><span class="o">=</span>/tmp -o allow_other -o use_path_request_style -o <span class="nv">uid</span><span class="o">=</span>&lt;UID&gt; -o <span class="nv">gid</span><span class="o">=</span>&lt;GID&gt;
+s3fs &lt;space_name&gt; /var/www/images -o <span class="nv">url</span><span class="o">=</span>&lt;s3 endpoint&gt; -o <span class="nv">use_cache</span><span class="o">=</span>/tmp -o allow_other -o use_path_request_style -o <span class="nv">uid</span><span class="o">=</span>&lt;UID&gt; -o <span class="nv">gid</span><span class="o">=</span>&lt;GID&gt;
+s3fs &lt;space_name&gt; /var/www/stream-thumb -o <span class="nv">url</span><span class="o">=</span>&lt;s3 endpoint&gt; -o <span class="nv">use_cache</span><span class="o">=</span>/tmp -o allow_other -o use_path_request_style -o <span class="nv">uid</span><span class="o">=</span>&lt;UID&gt; -o <span class="nv">gid</span><span class="o">=</span>&lt;GID&gt;
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Verify the Mount was successful. The buckets should show as a s3fs mount at the bottom of the output</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mount
+</pre></div>
+</div>
+<blockquote>
+<div><p>Note: To mount persistently, you can add the following to your fstab file</p>
+</div></blockquote>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">s3fs</span><span class="c1">#&lt;bucket_name&gt; /var/www/images fuse url=&lt;endpoint_url&gt;,use_cache=/tmp,allow_other,use_path_request_style,_netdev,uid=33,gid=33 0 0</span>
+</pre></div>
+</div>
+</section>
+<section id="ejabberd">
+<h4>Ejabberd<a class="headerlink" href="#ejabberd" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Clone the git repository</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://gitlab.com/Deamos/flask-nginx-rtmp-manager.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install the Config Tool Prerequisites (if not already installed)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dialog
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP Configuration Tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flask-nginx-rtmp-manager
+sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Option 1 - “Install…”</p></li>
+<li><p>Select Option 6 - “Install Ejabberd”</p></li>
+<li><p>During the install process, the Config Tool will ask for an Ejabberd Full Qualified Domain Name (FQDN). This should be the same as the public domain name which will be used to access OSP. This should be a valid DNS entry. Use of an IP address may not function properly.</p></li>
+<li><p>On completion, exit the OSP Config Tool.</p></li>
+<li><p>Setup a new Ejabberd admin account.</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo /usr/local/ejabberd/bin/ejabberdctl register admin localhost &lt;password&gt;
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Edit the ejabberd.yml</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /usr/local/ejabberd/conf/ejabberd.yml
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Change the following lines to match your expected configuration:</p></li>
+</ol>
+<ul class="simple">
+<li><p>Line 43-44</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5443</span><span class="w"></span>
+<span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;::&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Line 55-56</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">5280</span><span class="w"></span>
+<span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;::&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Line 77-78</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4560</span><span class="w"></span>
+<span class="nt">ip</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;::&quot;</span><span class="w"></span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Line 91-93 (Add one line per OSP core or use CIDR Notation to allow a block of IPs)</p></li>
+</ul>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">ip</span><span class="p">:</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">127.0.0.0/8</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">::1/128</span><span class="w"></span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;ip address of OSP Core&gt;</span><span class="w"></span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Save the ejabberd.yml file</p></li>
+<li><p>Edit the auth_osp.py Authentication Handler</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">ejabberd</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">auth_osp</span><span class="o">.</span><span class="n">py</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Edit the protocol and ospAPIServer variables to match your OSP Core Instance.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">protocol</span> <span class="o">=</span> <span class="s2">&quot;https&quot;</span>
+<span class="n">ospAPIServer</span> <span class="o">=</span> <span class="s2">&quot;osp.example.com&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="14">
+<li><p>Save the auth_osp.py file</p></li>
+<li><p>Restart Ejabberd</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart ejabberd
+</pre></div>
+</div>
+</section>
+<section id="redis">
+<h4>Redis<a class="headerlink" href="#redis" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Install Redis</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt update
+sudo apt install redis-server
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Edit the redis.conf file</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/redis/redis.conf
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Find &amp; Edit the bind location to listen on all interfaces</p></li>
+</ol>
+<div class="highlight-conf notranslate"><div class="highlight"><pre><span></span>bind 0.0.0.0
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Find and Set a Redis Password</p></li>
+</ol>
+<div class="highlight-conf notranslate"><div class="highlight"><pre><span></span>requirepass &lt;Password&gt;
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Save the redis.conf file</p></li>
+<li><p>Restart Redis</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart redis.service
+</pre></div>
+</div>
+</section>
+<section id="database">
+<h4>Database<a class="headerlink" href="#database" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Install MariaDB</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get update <span class="o">&amp;&amp;</span> sudo apt-get install mariadb-server
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Download the OSP Modifications for MariaDB</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo wget <span class="s2">&quot;https://gitlab.com/Deamos/flask-nginx-rtmp-manager/-/raw/master/setup/mysql/mysqld.cnf&quot;</span> -O /etc/mysql/my.cnf
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Edit the my.cnf file</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /etc/mysql/my.cnf
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Edit the bind-bind address to listen on all interfaces</p></li>
+</ol>
+<div class="highlight-cnf notranslate"><div class="highlight"><pre><span></span>bind-address = 0.0.0.0
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>Restart MariaDB</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart mysql
+</pre></div>
+</div>
+<ol class="arabic simple" start="6">
+<li><p>Log into MariaDB</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo mysql
+</pre></div>
+</div>
+<ol class="arabic simple" start="7">
+<li><p>Create the Database &amp; User. Be aware the remote server ips should be the IP address(es) of the OSP-Core Systems (See https://mariadb.com/kb/en/configuring-mariadb-for-remote-client-access/#granting-user-connections-from-remote-hosts)</p></li>
+</ol>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">DATABASE</span><span class="w"> </span><span class="n">osp</span><span class="p">;</span><span class="w"></span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">USER</span><span class="w"> </span><span class="s1">&#39;&lt;username&gt;&#39;</span><span class="o">@</span><span class="s1">&#39;&lt;remote_server_ip&gt;&#39;</span><span class="w"> </span><span class="n">IDENTIFIED</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="s1">&#39;&lt;password&gt;&#39;</span><span class="p">;</span><span class="w"></span>
+<span class="k">GRANT</span><span class="w"> </span><span class="k">ALL</span><span class="w"> </span><span class="k">PRIVILEGES</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">osp</span><span class="p">.</span><span class="o">*</span><span class="w"> </span><span class="k">TO</span><span class="w"> </span><span class="s1">&#39;&lt;username&gt;&#39;</span><span class="o">@</span><span class="s1">&#39;&lt;remote_server_ip&gt;&#39;</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Quit the MariaDB Console</p></li>
+</ol>
+<div class="highlight-sql notranslate"><div class="highlight"><pre><span></span><span class="n">quit</span><span class="p">;</span><span class="w"></span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>The Database will be initialized on the successful run of an OSP-Core Instance</p></li>
+</ol>
+</section>
+<section id="osp-core">
+<h4>OSP-Core<a class="headerlink" href="#osp-core" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Clone the git repository</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://gitlab.com/Deamos/flask-nginx-rtmp-manager.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install the Config Tool Prerequisites (if not already installed)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dialog
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP Configuration Tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flask-nginx-rtmp-manager
+sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Option 1 - “Install…”</p></li>
+<li><p>Select Option 2 - “Install OSP-Core”</p></li>
+<li><p>On completion, exit the OSP Config Tool.</p></li>
+<li><p>Copy the OSP config.py.dist file to config.py</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo cp /opt/osp/conf/config.py.dist /opt/osp/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Edit the config.py file</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /opt/osp/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Change the dbLocation variable to match your database credentials and IP/DNS</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dbLocation</span> <span class="o">=</span> <span class="s1">&#39;mysql+pymysql://&lt;user&gt;:&lt;password&gt;@&lt;db_host&gt;/&lt;db_name&gt;?charset=utf8mb4&#39;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Change the Redis variables to match the IP/DNS and password set for it</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">redisHost</span><span class="o">=</span><span class="s2">&quot;redis.example.com&quot;</span>
+<span class="n">redisPort</span><span class="o">=</span><span class="mi">6379</span>
+<span class="n">redisPassword</span><span class="o">=</span><span class="s2">&quot;redis_password&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Change the Ejabberd variables to match your configuration</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ejabberdAdmin</span> <span class="o">=</span> <span class="s2">&quot;admin&quot;</span> <span class="o">&lt;--</span><span class="n">Leave</span> <span class="n">this</span> <span class="k">as</span> <span class="n">admin</span>
+<span class="n">ejabberdPass</span> <span class="o">=</span> <span class="s2">&quot;ejabberd_admin_password&quot;</span>
+<span class="n">ejabberdHost</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span> <span class="o">&lt;--</span><span class="n">Leave</span> <span class="n">this</span> <span class="k">as</span> <span class="n">localhost</span>
+<span class="n">ejabberdServer</span> <span class="o">=</span><span class="s2">&quot;ejabberd.example.com&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="12">
+<li><p>Review the values in the OSP /opt/osp/conf/config.py.</p></li>
+</ol>
+<blockquote>
+<div><p><strong><em>NOTE:</em></strong> secretKey and passwordSalt should be changed from their default values.</p>
+</div></blockquote>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /opt/osp/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Restart the OSP Core Workers</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart osp.target
+</pre></div>
+</div>
+<ol class="arabic simple" start="14">
+<li><p>Save the config.py file</p></li>
+<li><p>Initialize the Database by running the command line upgrader</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo bash osp-config.sh upgrade db
+</pre></div>
+</div>
+<ol class="arabic simple" start="16">
+<li><p>Open a web browser and browse to:
+<code class="docutils literal notranslate"><span class="pre">http://&lt;OSPCore</span> <span class="pre">IP</span> <span class="pre">Address</span> <span class="pre">or</span> <span class="pre">DNS&gt;</span></code></p></li>
+<li><p>Setup OSP using the Initial Configuration Wizard</p></li>
+</ol>
+</section>
+<section id="osp-rtmp">
+<h4>OSP-RTMP<a class="headerlink" href="#osp-rtmp" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Clone the git repository</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://gitlab.com/Deamos/flask-nginx-rtmp-manager.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install the Config Tool Prerequisites (if not already installed)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dialog
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP Configuration Tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flask-nginx-rtmp-manager
+sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Option 1 - “Install…”</p></li>
+<li><p>Select Option 3 - “Install OSP-RTMP”</p></li>
+<li><p>On completion, exit the OSP Config Tool.</p></li>
+<li><p>Copy and Edit the OSP-RTMP config.py file</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo cp /opt/osp-rtmp/conf/config.py.dist /opt/osp-rtmp/conf/config.py
+sudo nano /opt/osp-rtmp/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="8">
+<li><p>Change the ospCoreAPI Variable to point at your OSP-Core instance</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ospCoreAPI</span> <span class="o">=</span> <span class="s2">&quot;http://ospcore.example.com&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Start the OSP-RTMP Instance</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl start osp-rtmp
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Open a web browser and go to your OSP-Core Instance</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ospcore</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>Log on as an Admin and Open the Admin Settings</p></li>
+<li><p>Select RTMP Servers</p></li>
+<li><p>Click the Plus Sign Button</p></li>
+<li><p>Type in the IP or Fully Qualified Domain Name for your OSP-RTMP Server and click Add</p></li>
+</ol>
+</section>
+<section id="osp-edge">
+<h4>OSP-Edge<a class="headerlink" href="#osp-edge" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Clone the git repository</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://gitlab.com/Deamos/flask-nginx-rtmp-manager.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install the Config Tool Prerequisites (if not already installed)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dialog
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP Configuration Tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flask-nginx-rtmp-manager
+sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Option 1 - “Install…”</p></li>
+<li><p>Select Option 4 - “Install OSP-Edge”</p></li>
+<li><p>When prompted, input the IP address of your OSP-RTMP Instance</p></li>
+<li><p>On completion, exit the OSP Config Tool.</p></li>
+<li><p>If you need to add additional authorized OSP-RTMP Instances, edit the osp-edge-rtmp.conf file for Nginx</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /usr/local/nginx/conf/services/osp-edge-rtmp.conf
+</pre></div>
+</div>
+<ol class="arabic simple" start="9">
+<li><p>Add any additional authorize publishing IPs to stream-data and stream-data-adapt:</p></li>
+</ol>
+<div class="highlight-conf notranslate"><div class="highlight"><pre><span></span>allow publish &lt;IP Address&gt;;
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Restart Nginx</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx-osp
+</pre></div>
+</div>
+<ol class="arabic simple" start="12">
+<li><p>Open a web browser and go to your OSP-Core Instance</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">ospcore</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Log on as an Admin and Open the Admin Settings</p></li>
+<li><p>Select Edge Streamers</p></li>
+<li><p>Add the Fully Qualified Domain Name or IP Address of the Edge Server</p></li>
+<li><p>Add the Load Percentage that the Edge Server will use.</p></li>
+</ol>
+<blockquote>
+<div><p><strong><em>NOTE:</em></strong> The sum of all Edge Servers must equal 100%.</p>
+</div></blockquote>
+<ol class="arabic simple" start="17">
+<li><p>Restart Nginx on all OSP-Core Servers</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx-osp
+</pre></div>
+</div>
+</section>
+<section id="osp-proxy">
+<h4>OSP-Proxy<a class="headerlink" href="#osp-proxy" title="Permalink to this headline">¶</a></h4>
+<ol class="arabic simple">
+<li><p>Clone the git repository</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git clone https://gitlab.com/Deamos/flask-nginx-rtmp-manager.git
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>Install the Config Tool Prerequisites (if not already installed)</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dialog
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>Run the OSP Configuration Tool</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> flask-nginx-rtmp-manager
+sudo bash osp-config.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>Select Option 1 - “Install…”</p></li>
+<li><p>Select Option 5 - “Install OSP-Proxy”</p></li>
+<li><p>When prompted, input the Protocol and Fully Qualified Domain Name of your OSP-Core Instance (ex: https://osp.example.com)</p></li>
+<li><p>On completion, exit the OSP Config Tool.</p></li>
+<li><p>If you are using TLS/SSL on your Core Site, Acquire a TLS Certificate</p></li>
+<li><p>Edit /usr/local/nginx/conf/custom/osp-proxy-custom-servers.conf</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /usr/local/nginx/conf/custom/osp-proxy-custom-servers.conf
+</pre></div>
+</div>
+<ol class="arabic simple" start="10">
+<li><p>Change Line 8 to match your OSP Core FQDN</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">valid_referers</span> <span class="n">server_names</span> <span class="n">osp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span> <span class="o">~.</span><span class="p">;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="11">
+<li><p>If you are using TLS, Comment the following Line:
+<code class="docutils literal notranslate"><span class="pre">listen</span> <span class="pre">80</span> <span class="pre">default_server;</span></code></p></li>
+<li><p>Uncomment the following lines and add the TLS configuration:</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># listen 443 ssl http2 default_server;</span>
+<span class="c1"># ssl_certificate /etc/letsencrypt/live/osp.example.com/fullchain.pem;</span>
+<span class="c1"># ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;</span>
+<span class="c1"># ssl_protocols TLSv1.2 TLSv1.3;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="13">
+<li><p>Edit the OSP-Proxy Configuration File</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /opt/osp-proxy/conf/config.py
+</pre></div>
+</div>
+<ol class="arabic simple" start="14">
+<li><p>Change the Flask Secret Key to a Random Value</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Flask Secret Key</span>
+<span class="n">secretKey</span><span class="o">=</span><span class="s2">&quot;CHANGEME&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>If you are dedicating the proxy to a specific source (An Edge or Another Proxy), uncomment the ForceDestination Lines and set to match your source</p></li>
+</ol>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># Force Destination - Use to point to Specified Edge Server or Tiered Proxy. Uncomment to override API&#39;s RTMP List and use the destination you list</span>
+<span class="n">forceDestination</span> <span class="o">=</span> <span class="s2">&quot;edge.example.com&quot;</span>
+<span class="n">forceDestinationType</span> <span class="o">=</span> <span class="s2">&quot;edge&quot;</span> <span class="c1"># Choices are &quot;edge&quot;, &quot;proxy&quot;</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="15">
+<li><p>Restart Nginx-OSP and OSP-Proxy</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx-osp
+sudo systemctl restart osp-proxy
+</pre></div>
+</div>
+<ol class="arabic simple" start="16">
+<li><p>Ensure all Edge or RTMP Servers are listed in the OSP-Core Admin Panel. OSP-Proxy will query the OSP API and generate configurations to handle the proxy connection to retrieve the HLS fragments.</p></li>
+<li><p>Perform a first run of the Configuration File Generator</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> /opt/osp
+sudo bash updateUpstream.sh
+</pre></div>
+</div>
+<ol class="arabic simple" start="18">
+<li><p>Connect to each OSP-RTMP/Single Server and perform the following on each:</p></li>
+</ol>
+<ul class="simple">
+<li><p>If using TLS on the Core, Generate a TLS certificate</p></li>
+<li><p>Edit the /usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Add the IP Address of each OSP-Proxy that will be accessing the source for /stream-thumb, /live-adapt, and /live:</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># allow &lt;ip of proxy&gt;;</span>
+<span class="n">allow</span> <span class="mf">201.13.12.50</span><span class="p">;</span>
+<span class="n">allow</span> <span class="mf">193.10.3.9</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>If using TLS, Edit the /usr/local/nginx/conf/custom/osp-rtmp-custom-server</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">rtmp</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">server</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Comment out the first line, uncomment the TLS information and add your certificate info (Note: Port 5999 will stay the same):</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#listen 5999 default_server;</span>
+<span class="c1">### Comment Above and Uncomment/Edit Below for OSP-Proxy TLS ###</span>
+<span class="n">listen</span> <span class="mi">5999</span> <span class="n">ssl</span> <span class="n">http2</span> <span class="n">default_server</span><span class="p">;</span>
+<span class="n">ssl_certificate</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">letsencrypt</span><span class="o">/</span><span class="n">live</span><span class="o">/</span><span class="n">osp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">fullchain</span><span class="o">.</span><span class="n">pem</span><span class="p">;</span>
+<span class="n">ssl_certificate_key</span> <span class="o">/</span><span class="n">etc</span><span class="o">/</span><span class="n">letsencrypt</span><span class="o">/</span><span class="n">live</span><span class="o">/</span><span class="n">osp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">privkey</span><span class="o">.</span><span class="n">pem</span><span class="p">;</span>
+<span class="n">ssl_protocols</span> <span class="n">TLSv1</span><span class="mf">.2</span> <span class="n">TLSv1</span><span class="mf">.3</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Restart the Nginx-OSP instance</p></li>
+</ul>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo systemctl restart nginx-osp
+</pre></div>
+</div>
+<ol class="arabic simple" start="18">
+<li><p>If you forced an Edge Server on Step 14, Connect to the Edge Server and edit /usr/local/nginx/conf/locations/osp-edge-redirects.conf</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo nano /usr/local/nginx/conf/custom/osp-edge-redirects.conf
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Comment the add_headers line for /edge and /edge-adapt</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#add_header &#39;Access-Control-Allow-Origin&#39; &quot;*&quot; always;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Edit the custom referes file at /usr/local/nginx/conf/custom/osp-edge-custom-refer.conf</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">nano</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">nginx</span><span class="o">/</span><span class="n">conf</span><span class="o">/</span><span class="n">custom</span><span class="o">/</span><span class="n">osp</span><span class="o">-</span><span class="n">edge</span><span class="o">-</span><span class="n">custom</span><span class="o">-</span><span class="n">refer</span><span class="o">.</span><span class="n">conf</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Add the OSP Core Server to the Valid Referers list for /edge and /edge-adapt</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">valid_referers</span> <span class="n">server_names</span> <span class="n">osp</span><span class="o">.</span><span class="n">example</span><span class="o">.</span><span class="n">com</span> <span class="o">~.</span><span class="p">;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Restart Nginx-OSP</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sudo</span> <span class="n">systemctl</span> <span class="n">restart</span> <span class="n">nginx</span><span class="o">-</span><span class="n">osp</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="19">
+<li><p>Add the OSP-Proxy Domain to the OSP-Core’s Admin Panel under Settings</p></li>
+<li><p>Test a Stream and verify that the video is displaying</p></li>
+</ol>
+</section>
+</section>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Open Streaming Platform</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="about.html">About Open Streaming Platform</a></li>
+<li class="toctree-l1"><a class="reference internal" href="repo.html">Repository Information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribution.html">Attribution</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install-open-streaming-platform">Install Open Streaming Platform</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="attribution.html" title="previous chapter">Attribution</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2022, Open Streaming Platform.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/install.md.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
