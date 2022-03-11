@@ -27,6 +27,9 @@ Welcome to Open Streaming Platform's documentation!
    :caption: Usage:
 
    usage/streaming.md
+   usage/channels.md
+   usage/uploadingvideo.md
+   usage/administrator.md
 
 Indices and tables
 ==================
