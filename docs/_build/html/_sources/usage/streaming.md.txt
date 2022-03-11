@@ -5,6 +5,7 @@ In order to stream to OSP, a channel with a valid stream key is needed. After cr
 
 ## Stream Keys
 You will find your stream key at the bottom of the Channel configuration page as follows:
+![/_images/user_channels_page.png](/_images/user_channels_page.png)
 
 Note that only registered users with the streamer role are able to stream to OSP.
 
@@ -38,8 +39,9 @@ By default, nginx has been configured to transcode 1080p, 720p, 480p, & 360p. Yo
 Below is a listing of tested configurations for RTMP Source Configurations which produce the lowest delay (around 5s delay)
 
 ### Open Broadcaster Software
-- Medium Quality (720p) / Low Delay Setup
 
+#### Medium Quality (720p) / Low Delay Setup
+![/_images/obs_lowlatency.jpg](/_images/obs_lowlatency.jpg)
 
 ### ffMPEG
 
