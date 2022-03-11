@@ -488,3 +488,231 @@ sudo systemctl restart nginx-osp
 ```
 19) Add the OSP-Proxy Domain to the OSP-Core's Admin Panel under Settings
 20) Test a Stream and verify that the video is displaying
+
+### Manual Install
+Coming Soon
+
+### Docker Install
+> IMPORTANT NOTE: OSP's Docker install is currently on the Beta 6d release due to the need to rework the Dockerfile for eJabberd for chat.
+{.is-warning}
+
+A Dockerfile has been provided for running OSP in a container. However due to the way NginX, Gunicorn, Flask, and Docker work, for OSP to work properly, the Frontend must be exposed using Port 80 or 443 and the RTSP port from OBS or other streaming software must be exposed on Port 1935.
+This accomplished easily by using a reverse proxy in Docker such as Traefik. However, Port 1935 will not be proxied and must be mapped to the same port on the host.
+An external Redis server/container is required to handling asynchronous communications between the internal Gunicorn worker instances.
+Dockerhub URL: https://hub.docker.com/r/deamos/openstreamingplatform
+```
+docker pull deamos/openstreamingplatform
+```
+#### Environment Variables
+DB_URL: Sets the SQLAlchemy URL String for the used DB.
+Default: "sqlite:///db/database.db"
+See https://docs.sqlalchemy.org/en/13/core/engines.html
+FLASK_SECRET: Flask Secret Key
+Format: "CHANGEME"
+FLASK_SALT: Flask User Salt Value
+Format: "CHANGEME"
+OSP_ALLOWREGISTRATION: Sets OSP to allow users to create accounts
+Default: True
+OSP_REQUIREVERIFICATION: Sets New OSP user accounts to verify their email addresses
+Default: True
+REDIS_HOST: Sets the Redis Instance IP/Hostname (REQUIRED)
+REDIS_PORT: Sets the Redis Instance Port
+Default: 6379
+REDIS_PASSWORD: Sets the Redis Instance Password, if needed
+
+#### Added in Beta 5a
+Beta 5a will add additional Environment Variable to pre-configure OSP without needing to run the "First Run" Configuration
+- OSP_ADMIN_USER
+- OSP_ADMIN_EMAIL
+- OSP_ADMIN_PASSWORD
+- OSP_SERVER_NAME
+- OSP_SERVER_PROTOCOL
+- OSP_SERVER_ADDRESS
+- OSP_SMTP_SEND_AS
+- OSP_SMTP_SERVER
+- OSP_SMTP_PORT
+- OSP_SMTP_USER
+- OSP_SMTP_PASSWORD
+- OSP_SMTP_TLS
+- OSP_SMTP_SSL
+- OSP_ALLOW_RECORDING
+- OSP_ALLOW_UPLOAD
+- OSP_ADAPTIVE_STREAMING
+- OSP_ALLOW_COMMENT
+- OSP_DISPLAY_EMPTY
+
+#### Recommended Volumes/Mount Points
+- /var/www - Storage of Images, Streams, and Stored Video Files
+- /opt/osp/db/ - SQLite DB Location (if used)
+- /usr/local/nginx/conf - Contains the NginX Configuration files which can be altered to suit your needs (HTTPS without something like Traefik)
+
+## Database Setup
+
+### Installation
+
+#### Set Up MySQL
+Prior to using MySQL with OSP the first time, do the following to configure OSP for full Unicode Support (UTF8MB4)
+1. Install MySQL Server on Database Server or OSP Server
+```bash
+sudo apt-get install mysql-server
+```
+2. Copy the MySQL Configuration File in to MySQL
+```bash
+sudo cp /opt/osp/setup/mysql/mysqld.cnf /etc/mysql/my.cnf
+```
+3. Restart MySQL
+```bash
+sudo systemctl restart mysql
+```
+4. Open MySQL and create the OSP Database and User
+```
+sudo mysql
+```
+```mysql
+CREATE DATABASE osp;
+CREATE USER 'newuser'@'localhost' IDENTIFIED BY 'password';
+GRANT ALL PRIVILEGES ON osp.* TO 'newuser'@'localhost';
+```
+5. Edit the OSP Configuration File to use MySQL
+```
+sudo vi /opt/osp/conf/config.py
+```
+From:
+```
+dbLocation="sqlite:///db/database.db"
+```
+To:
+```
+dbLocation = 'mysql+pymysql://username:password@localhost/osp?charset=utf8mb4'
+```
+6. Restart OSP
+```
+sudo systemctl restart osp.target
+```
+> Note: For Servers that have upgraded from versions prior to Beta 6, see https://wiki.openstreamingplatform.com/Install/Tweaks#database to convert from UTF8 to UTF8MB4 for Full Unicode Support
+
+### Backup and Restore
+
+#### Backup
+1. Go to the Admin Settings Page
+2. Select Backup/Restore and Click Download
+
+#### Restore
+> Warning: If you have MySQL setup for Caching, it is recommended to temporarily disable it prior to restoring a backup. Failure to do so may cause the restore to fail.
+
+1. Go to Backup/Restore in the Admin Settings page or Select Restore from Backup on the Initial Setup Wizard
+2. Click Browse and Select the OSP Backup JSON File
+3. Check Restore Recorded Video DB Table, if you would like to retain Video and Clip Information.
+4. Click Restore
+
+### Migration
+
+#### Moving from UTF8 to UTF8MB4 in MySQL
+Installs prior to Beta 6 were not configured to fully use UTF8MB4 and may not be able to use the full Unicode set. To correct this issue, do the following:
+1. Backup your existing Database per the proceedures above.
+2. Shut down OSP
+```
+sudo systemctl stop osp.target
+```
+3. Open the MySQL Console
+```
+sudo mysql
+```
+4. Drop the OSP Database;
+```
+drop database osp;
+```
+5. Exit the MySQL Console
+```
+quit;
+```
+6. Follow the steps for Setting up a New MySQL install, starting at Step 2
+7. On the Insital Setup Wizard, Restore your Database Per the Steps under Restore Above.
+
+## Let's Encrypt Setup
+The focus of this guide will be to provide an example of how to setup SSL with LetsEncrypt and Certbot.
+For this example we are using a default install of OSP on Ubuntu 20.04 (or 18.04) LTS
+### Step one, install Certbot
+Install certbot (running with Nginx) as described at https://certbot.eff.org/instructions
+Installion of certbot in short (for most systems) works with snap as follows:
+```
+# sudo snap install core; sudo snap refresh core
+# sudo snap install --classic certbot
+# sudo ln -s /snap/bin/certbot /usr/bin/certbot
+```
+Verify certbot is installed:
+```
+# certbot --version
+certbot 1.13.0
+```
+### Create a location for certbot verification outside of the actual webroot
+```
+# mkdir /var/certbot
+# chmod 755 /var/certbot
+```
+Edit the OSP nginx config to use this location for the certbot verification by adding the following lines to /usr/local/nginx/conf/nginx.conf
+```
+location /.well-known/acme-challenge {
+root /var/certbot;
+}
+```
+These lines should go under your port 80 server, in my config I put them right below the line "include /usr/local/nginx/conf/locations/*.conf;"
+```
+# NGINX to HTTP Reverse Proxies
+server {
+include /usr/local/nginx/conf/custom/osp-custom-servers.conf;
+# set client body size to 16M #
+client_max_body_size 16M;
+include /usr/local/nginx/conf/locations/*.conf;
+location /.well-known/acme-challenge {
+ root /var/certbot;
+}
+# redirect server error pages to the static page /50x.html
+error_page 500 502 503 504 /50x.html;
+location = /50x.html {
+root html;
+}
+}
+include /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf;
+```
+### Restart Nginx
+```sudo systemctl restart nginx-osp```
+### Run certbot to request certs from LetsEncrypt
+```
+# sudo certbot certonly --webroot -w /var/certbot -d <domain>
+```
+This command will prompt you for a few pieces of information and then it will save your certs in /etc/letsencrypt/live/
+```
+- Congratulations! Your certificate and chain have been saved at:
+/etc/letsencrypt/live/<domain>/fullchain.pem
+Your key file has been saved at:
+/etc/letsencrypt/live/<domain>/privkey.pem
+Your cert will expire on <date>. To obtain a new or tweaked
+version of this certificate in the future, simply run certbot
+again. To non-interactively renew *all* of your certificates, run
+"certbot renew"
+```
+### Configure nginx-osp to use SSL and the certificates you have requested
+Edit /usr/local/nginx/conf/custom/osp-custom-servers.conf and edit the section to similar to below:
+Remember to change your domain name and certificate location to match the step above.
+```
+#listen 80 default_server;
+### Comment Above and Uncomment/Edit Below for OSP-Proxy TLS ###
+listen 443 ssl http2 default_server;
+ssl_certificate /etc/letsencrypt/live/osp.example.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;
+ssl_protocols TLSv1.2 TLSv1.3;
+```
+### Configure nginx-osp to do http to https redirect
+Uncomment all lines in /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf to read as follows:
+```
+server {
+listen 80;
+server_name _;
+return 301 https://$host$request_uri;
+}
+```
+Restart nginx.osp
+```
+# sudo systemctl restart nginx-osp
+```
