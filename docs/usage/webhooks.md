@@ -13,34 +13,35 @@ Currently supported triggers:
 - On a Video Metadata Change (Name/Topic)
 ## Webhook Variables
 When defining a webhook payload, various variables can be set which will be replaced with live data at the time the webhook is run. Webhook variables are defined as the following:
-- %channelname%
-- %channelurl%
-- %channeltopic%
-- %channelimage%
-- %streamer%
-- %channeldescription%
-- %streamname%
-- %streamurl%
-- %streamtopic%
-- %streamimage%
-- %user%
-- %userpicture%
-- %videoname%
-- %videodate%
-- %videodescription%
-- %videotopic%
-- %videourl%
-- %videothumbnail%
-- %comment%
-# Examples
-## Discord
+- ```%channelname%```
+- ```%channelurl%```
+- ```%channeltopic%```
+- ```%channelimage%```
+- ```%streamer%```
+- ```%channeldescription%```
+- ```%streamname%```
+- ```%streamurl%```
+- ```%streamtopic%```
+- ```%streamimage%```
+- ```%user%```
+- ```%userpicture%```
+- ```%videoname%```
+- ```%videodate%```
+- ```%videodescription%```
+- ```%videotopic%```
+- ```%videourl%```
+- ```%videothumbnail%```
+- ```%comment%```
+## Examples
+### Discord
 **Type:** POST
+
 **Trigger event:** Stream start
-### Header
+#### Header
 ```json
 {"Content-Type": "application/json"}
 ```
-### Payload
+#### Payload
 ```json
 {
 "content": "%channelname% went live on the OSP Demo Server",
@@ -82,18 +83,20 @@ When defining a webhook payload, various variables can be set which will be repl
 ]
 }
 ```
-## Mastadon
+### Mastadon
+
 **Type:** POST
+
 **Trigger event:** Stream start
-### URL
+#### URL
 ```
 https://$FQDN/api/v1/statuses?access_token=$TOKEN
 ```
-### Header
+#### Header
 ```json
 {"Content-Type": "application/json"}
 ```
-### Payload
+#### Payload
 ```json
 {
 "status": "New Live Stream on OSP.\n\nURL: %streamurl%\nChannel: %channelname%\nTopic: %streamtopic%\nDescription: %channeldescription%"
