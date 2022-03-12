@@ -28,6 +28,10 @@ Welcome to Open Streaming Platform's documentation!
 
    usage/streaming.md
    usage/channels.md
+   usage/uploadingvideo.md
+   usage/administrator.md
+   usage/oauth.md
+   usage/webhooks.md
 
 Indices and tables
 ==================
