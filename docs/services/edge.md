@@ -16,7 +16,7 @@ As many OSP Edge Streamer Nodes are needed can be created and added to OSP by an
 
 > Note: Starting in Beta 6, the Master OSP Server can act as an Edge Node. This can be manually added by using the Master OSP Server's Site Address, as set in the Admin Settings Screen
 
-![OSP Edge Add Modal](/_images/services_edge_add_modal.jpg)
+![OSP Edge Add Modal](/_images/services_edge_add_modal.png)
 
 3. Activate each Edge Streamer that will be used.
 4. After adding your settings, you will need to restart Nginx-RTMP on the primary OSP Server
