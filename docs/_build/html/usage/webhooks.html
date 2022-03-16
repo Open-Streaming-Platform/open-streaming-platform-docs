@@ -18,6 +18,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Troubleshooting" href="troubleshooting.html" />
     <link rel="prev" title="OAuth Configuration" href="oauth.html" /> 
 </head>
 
@@ -57,22 +58,23 @@
 <li class="toctree-l1"><a class="reference internal" href="oauth.html">OAuth Configuration</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Webhooks</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#webhook-variables">Webhook Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#discord">Discord</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#header">Header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#payload">Payload</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#examples">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#discord">Discord</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#header">Header</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#payload">Payload</a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="#mastadon">Mastadon</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#url">URL</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id1">Header</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id2">Payload</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#mastadon">Mastadon</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#url">URL</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id1">Header</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">Payload</a></li>
 </ul>
 </li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="troubleshooting.html">Troubleshooting</a></li>
 </ul>
 
         </div>
@@ -119,42 +121,41 @@ Currently supported triggers:</p>
 <h2>Webhook Variables<a class="headerlink" href="#webhook-variables" title="Permalink to this headline"></a></h2>
 <p>When defining a webhook payload, various variables can be set which will be replaced with live data at the time the webhook is run. Webhook variables are defined as the following:</p>
 <ul class="simple">
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%channelname%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%channelurl%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%channeltopic%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%channelimage%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%streamer%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%channeldescription%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%streamname%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%streamurl%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%streamtopic%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%streamimage%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%user%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%userpicture%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%videoname%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%videodate%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%videodescription%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%videotopic%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%videourl%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%videothumbnail%</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">%comment%</span></code></p></li>
 </ul>
 </section>
-</section>
 <section id="examples">
-<h1>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h1>
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline"></a></h2>
 <section id="discord">
-<h2>Discord<a class="headerlink" href="#discord" title="Permalink to this headline"></a></h2>
-<p><strong>Type:</strong> POST
-<strong>Trigger event:</strong> Stream start</p>
+<h3>Discord<a class="headerlink" href="#discord" title="Permalink to this headline"></a></h3>
+<p><strong>Type:</strong> POST</p>
+<p><strong>Trigger event:</strong> Stream start</p>
 <section id="header">
-<h3>Header<a class="headerlink" href="#header" title="Permalink to this headline"></a></h3>
+<h4>Header<a class="headerlink" href="#header" title="Permalink to this headline"></a></h4>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="payload">
-<h3>Payload<a class="headerlink" href="#payload" title="Permalink to this headline"></a></h3>
+<h4>Payload<a class="headerlink" href="#payload" title="Permalink to this headline"></a></h4>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="nt">&quot;content&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;%channelname% went live on the OSP Demo Server&quot;</span><span class="p">,</span><span class="w"></span>
 <span class="nt">&quot;username&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;OSP Bot&quot;</span><span class="p">,</span><span class="w"></span>
@@ -199,28 +200,29 @@ Currently supported triggers:</p>
 </section>
 </section>
 <section id="mastadon">
-<h2>Mastadon<a class="headerlink" href="#mastadon" title="Permalink to this headline"></a></h2>
-<p><strong>Type:</strong> POST
-<strong>Trigger event:</strong> Stream start</p>
+<h3>Mastadon<a class="headerlink" href="#mastadon" title="Permalink to this headline"></a></h3>
+<p><strong>Type:</strong> POST</p>
+<p><strong>Trigger event:</strong> Stream start</p>
 <section id="url">
-<h3>URL<a class="headerlink" href="#url" title="Permalink to this headline"></a></h3>
+<h4>URL<a class="headerlink" href="#url" title="Permalink to this headline"></a></h4>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>https://$FQDN/api/v1/statuses?access_token=$TOKEN
 </pre></div>
 </div>
 </section>
 <section id="id1">
-<h3>Header<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h3>
+<h4>Header<a class="headerlink" href="#id1" title="Permalink to this headline"></a></h4>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="nt">&quot;Content-Type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/json&quot;</span><span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
 </section>
 <section id="id2">
-<h3>Payload<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h3>
+<h4>Payload<a class="headerlink" href="#id2" title="Permalink to this headline"></a></h4>
 <div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="w"></span>
 <span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;New Live Stream on OSP.\n\nURL: %streamurl%\nChannel: %channelname%\nTopic: %streamtopic%\nDescription: %channeldescription%&quot;</span><span class="w"></span>
 <span class="p">}</span><span class="w"></span>
 </pre></div>
 </div>
+</section>
 </section>
 </section>
 </section>
@@ -230,6 +232,7 @@ Currently supported triggers:</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="oauth.html" class="btn btn-neutral float-left" title="OAuth Configuration" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="troubleshooting.html" class="btn btn-neutral float-right" title="Troubleshooting" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -32,6 +32,13 @@ Welcome to Open Streaming Platform's documentation!
    usage/administrator.md
    usage/oauth.md
    usage/webhooks.md
+   usage/troubleshooting.md
+
+.. toctree::
+   :maxdepth: 2
+   :caption: Services:  
+
+   services/proxy.md
 
 Indices and tables
 ==================
