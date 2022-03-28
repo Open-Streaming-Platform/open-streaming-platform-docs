@@ -39,6 +39,7 @@ Welcome to Open Streaming Platform's documentation!
    :caption: Services:  
 
    services/proxy.md
+   services/edge.md
 
 Indices and tables
 ==================
