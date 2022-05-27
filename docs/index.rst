@@ -41,6 +41,13 @@ Welcome to Open Streaming Platform's documentation!
    services/proxy.md
    services/edge.md
 
+.. toctree::
+   :maxdepth: 2
+   :caption: Developer:
+
+   developer/api.md
+   developer/themes.md
+
 Indices and tables
 ==================
 

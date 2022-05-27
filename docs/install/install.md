@@ -2,8 +2,8 @@
 ## Requirements
 OSP has been verified to work with the following requirements
 
-- Ubuntu 18.04 or later, Debian 10 or later
-- Python 3.7 or later
+- Ubuntu 20.04 or later, Debian 10 or later
+- Python 3.8 or later
 - MySQL 5.7.7 or later, or MariaDB > 10.1, if not using SQLite
 - SMTP Mail Server for Email Address Validation and Subscriptions
 - FFMPEG 4 or greater
@@ -493,8 +493,6 @@ sudo systemctl restart nginx-osp
 Coming Soon
 
 ### Docker Install
-> IMPORTANT NOTE: OSP's Docker install is currently on the Beta 6d release due to the need to rework the Dockerfile for eJabberd for chat.
-{.is-warning}
 
 A Dockerfile has been provided for running OSP in a container. However due to the way NginX, Gunicorn, Flask, and Docker work, for OSP to work properly, the Frontend must be exposed using Port 80 or 443 and the RTSP port from OBS or other streaming software must be exposed on Port 1935.
 This accomplished easily by using a reverse proxy in Docker such as Traefik. However, Port 1935 will not be proxied and must be mapped to the same port on the host.
@@ -543,7 +541,6 @@ Beta 5a will add additional Environment Variable to pre-configure OSP without ne
 
 #### Recommended Volumes/Mount Points
 - /var/www - Storage of Images, Streams, and Stored Video Files
-- /opt/osp/db/ - SQLite DB Location (if used)
 - /usr/local/nginx/conf - Contains the NginX Configuration files which can be altered to suit your needs (HTTPS without something like Traefik)
 
 ## Database Setup
@@ -594,16 +591,18 @@ sudo systemctl restart osp.target
 ### Backup and Restore
 
 #### Backup
-1. Go to the Admin Settings Page
-2. Select Backup/Restore and Click Download
+System backups can be performed via making a backup copy of the /opt/osp/conf/config.py file and taking a SQL dump of the database using a tool like mysqldump
+```
+sudo mysqldump --databases osp > dump.sql
+```
 
 #### Restore
-> Warning: If you have MySQL setup for Caching, it is recommended to temporarily disable it prior to restoring a backup. Failure to do so may cause the restore to fail.
 
-1. Go to Backup/Restore in the Admin Settings page or Select Restore from Backup on the Initial Setup Wizard
-2. Click Browse and Select the OSP Backup JSON File
-3. Check Restore Recorded Video DB Table, if you would like to retain Video and Clip Information.
-4. Click Restore
+1. Copy the backup config.py file to /opt/osp/conf
+2. Restore the SQL backup taken
+```
+mysql < dump.sql
+```
 
 ### Migration
 

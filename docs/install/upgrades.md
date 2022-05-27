@@ -2,6 +2,22 @@
 
 ## Standard Upgrade
 
+## Version 0.8.x to Version 0.9.x
+Due to changes made with the database upgrade structure, an update script has been made to help reset the state of the database upgrade tracking table.  To update to 0.9.x, perform the following:
+
+1) Remove the existing DB Migrations folder
+```
+sudo rm -rf /opt/osp/migrations
+```
+2) Perform a git pull of the most recent build
+```
+sudo git pull
+```
+3) Run the Upgrade Script
+```
+sudo bash /opt/osp/setup/upgrade/0.9.0.sh
+```
+
 ## Versions < 0.8.8 to Versions > 0.8.8 
 Due to changes made in v0.8.8 to simplify Nginx Configurations, the upgrade to versions greater to 0.8. will require an extra step to move your server specific changes to the new setup.
 
