@@ -94,6 +94,7 @@ sudo systemctl restart mariadb
 
 #### NVIDIA GPU Transcoding (Ubuntu Server)
 (As Submitted by multi.flexi on 18/6/2021)
+
 1: Install Dependencies (not sure if all necessary)
 ```
 sudo apt install ladspa-sdk-dev libaom-dev libass-dev libbluray-dev libbs2b-dev libcaca-dev libcdio-paranoia-dev libcodec2-dev flite1-dev libfribidi-dev libgme-dev libgsm1-dev libjack-dev libmp3lame-dev libmysofa-dev libopenmpt-dev libopus-dev libpulse-dev librsvg2-dev librubberband-dev libshine-dev libsnappy-dev libsoxr-dev libspeex-dev libssh-dev libtheora-dev libtwolame-dev libvidstab-dev libvorbis-dev libvpx-dev libwavpack-dev libwebp-dev libx264-dev libx265-dev libxml2-dev libxvidcore-dev libzmq3-dev libzvbi-dev libomxil-bellagio-dev libopenal-dev libsdl2-dev libdc1394-22-dev libchromaprint-dev frei0r-plugins-dev libfreetype6-dev build-essential nasm yasm libgnutls28-dev liblilv-dev libdrm-dev libopenjp2-7-dev
