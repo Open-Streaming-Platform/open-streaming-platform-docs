@@ -3,7 +3,9 @@
 ## Standard Upgrade
 
 ## Version 0.8.x to Version 0.9.x
-Due to changes made with the database upgrade structure, an update script has been made to help reset the state of the database upgrade tracking table.  To update to 0.9.x, perform the following:
+Due to changes made with the database upgrade structure, an update script has been made to help reset the state of the database upgrade tracking table. In the process, Nginx will also be updated so it is recommended to backup any customizations made in /usr/local/nginx/conf.  This includes TLS/SSL Cert configurations.
+
+To update to 0.9.x, perform the following:
 
 1) Remove the existing DB Migrations folder
 ```
@@ -16,6 +18,25 @@ sudo git pull
 3) Run the Upgrade Script
 ```
 sudo bash /opt/osp/setup/upgrade/0.9.0.sh
+```
+4) After Completion, edit /opt/osp/conf/config.py:
+```
+sudo nano /opt/osp/conf/config.py
+```
+5) Add your SMTP Configuration to the config.py file
+```
+# Email Settings
+smtpSendAs="sendAs@email.com"
+smtpServerAddress="smtp.email.com"
+smtpServerPort=25
+smtpUsername=""
+smtpPassword=""
+# SMTP Encryption Options are ['none', 'tls', 'ssl']
+smtpEncryption="none"
+```
+6) Restart OSP
+```
+sudo systemctl restart osp.target
 ```
 
 ## Versions < 0.8.8 to Versions > 0.8.8 
