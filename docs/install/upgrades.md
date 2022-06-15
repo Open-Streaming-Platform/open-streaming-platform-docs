@@ -2,6 +2,8 @@
 
 ## Standard Upgrade
 
+To upgrade any version, make sure that you are on the correct branch (usually master), run osp-config.sh and select the compontent to upgrade. If further steps are required for specific versions, they are described below.
+
 ## Version 0.8.x to Version 0.9.x
 Due to changes made with the database upgrade structure, an update script has been made to help reset the state of the database upgrade tracking table. In the process, Nginx will also be updated so it is recommended to backup any customizations made in /usr/local/nginx/conf.  This includes TLS/SSL Cert configurations.
 
