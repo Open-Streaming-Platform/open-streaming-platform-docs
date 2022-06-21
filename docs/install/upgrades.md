@@ -2,6 +2,46 @@
 
 ## Standard Upgrade
 
+## Versions 0.9.x to x.x.x.x
+For all versions of OSP 0.9.0 and greater, the standard upgrade procedure has been changed to the following steps to prevent requiringa separate upgrade script moving forward.
+
+### Single Server Install
+---
+1) Open the OSP Directory
+```
+cd /opt/osp
+```
+2) Run a Git Pull to pull in the most recent code
+```
+sudo git pull
+```
+3) Run the OSP Configuration Tool Script
+```
+sudo bash osp-config.sh
+```
+4) Select Option 2: Upgrade...
+5) Select Option 1: Upgrade OSP - Single Server
+
+### Split Server Installs
+---
+Split Server Installs will typically not use the /opt/osp directory as the Git Repository.  In these instances, it would be best to clone the OSP respository
+
+1) Clone the OSP Repo
+```
+git clone https://gitlab.com/osp-group/flask-nginx-rtmp-manager.git
+```
+2) Open the Cloned Repo
+```
+cd flask-nginx-rtmp-managher
+```
+3) Run the OSP Configuration Tool Script
+```
+sudo bash osp-config.sh
+```
+4) Select Option 2: Upgrade...
+5) Select the Option Listed for the Component you are updating
+
+
 ## Version 0.8.x to Version 0.9.x
 Due to changes made with the database upgrade structure, an update script has been made to help reset the state of the database upgrade tracking table. In the process, Nginx will also be updated so it is recommended to backup any customizations made in /usr/local/nginx/conf.  This includes TLS/SSL Cert configurations.
 
