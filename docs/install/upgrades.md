@@ -1,6 +1,7 @@
 # Upgrades
 
 ## Standard Upgrade
+To upgrade any version, make sure that you are on the correct branch (usually master), and follow the steps as listed below:
 
 ## Versions 0.9.x to x.x.x.x
 For all versions of OSP 0.9.0 and greater, the standard upgrade procedure has been changed to the following steps to prevent requiringa separate upgrade script moving forward.
