@@ -42,7 +42,7 @@ sudo nano /opt/osp/conf/config.py
 ```bash
 sudo systemctl restart osp.target
 ```
-To test streaming on the server, see the "Testing OSP server" section of the [Streaming](/Usage/Streaming) page.
+To test streaming on the server, see the "Testing OSP server" section of the [Streaming](https://open-streaming-platform.readthedocs.io/en/latest/usage/streaming.html) page.
 
 ### Script Install - Split Server Install - OSP Components on Different Servers
 Starting with OSP version 0.8.0, OSP components can be split over multiple servers. This helps with spreading the load required for a busy OSP install with many viewers. In addition, splitting the components can be useful to set up load balancing by having multiple copies of the component and using a load balancer, such as HAproxy.
