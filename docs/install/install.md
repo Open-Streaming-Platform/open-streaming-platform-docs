@@ -29,12 +29,12 @@ sudo apt-get install dialog
 cd flask-nginx-rtmp-manager
 sudo bash osp-config.sh
 ```
-4) Select Option 1 - "Install..."
-5) Select Option 1 - "Install OSP - Single Server"
+4) Select Option 1 - _"Install..."_
+5) Select Option 1 - _"Install OSP - Single Server"_
 6) During the install process, the Config Tool will ask for an Ejabberd Full Qualified Domain Name (FQDN). This should be the same as the public domain name which will be used to access OSP. This should be a valid DNS entry as it is used to configure Ejabberd's Chat Domain and by default is used by the chat client to connect users to the XMPP chat system. IP addresses may not function properly.
 7) On completion, exit the OSP Config Tool.
-8) Review the values in the OSP /opt/osp/conf/config.py.
-> **_NOTE:_** secretKey and passwordSalt should be changed from their default values.
+8) Review the values in the OSP `/opt/osp/conf/config.py`.
+> **_NOTE:_** `secretKey` and `passwordSalt` should be changed from their default values.
 ```bash
 sudo nano /opt/osp/conf/config.py
 ```
@@ -42,7 +42,7 @@ sudo nano /opt/osp/conf/config.py
 ```bash
 sudo systemctl restart osp.target
 ```
-To test streaming on the server, see the "Testing OSP server" section of the [Streaming](https://open-streaming-platform.readthedocs.io/en/latest/usage/streaming.html) page.
+To test streaming on the server, see the "Testing OSP server" section of the [Streaming](https://open-streaming-platform.readthedocs.io/en/latest/usage/streaming.html#testing-osp-server) page.
 
 ### Script Install - Split Server Install - OSP Components on Different Servers
 Starting with OSP version 0.8.0, OSP components can be split over multiple servers. This helps with spreading the load required for a busy OSP install with many viewers. In addition, splitting the components can be useful to set up load balancing by having multiple copies of the component and using a load balancer, such as HAproxy.
@@ -50,9 +50,9 @@ To perform a Split Server Setup, please review the following requirements:
 * **Componentaization** - Multiple components can be installed on a single server to reduce cost. Doing so can also prevent needing some of the considerations in this list. For Example, if you consolidate OSP-Core and OSP-RTMP and do not require OSP-Edge Servers, you will not need Centralized storage as they
 * **Centralized Storage** - OSP requires some form of mounted centralized storage for Videos, Clips, & Stream/Video Thumbnails. This can be accomplished easily by using an S3-based storage bucket and using s3fs to mount the bucket to the servers file systems. Another method would be a NFS mount in the require location. Below is the required drive mounts and locations
 * **Mounts**
-  * /var/www/videos - OSP-Core, OSP-RTMP
-  * /var/www/stream-thumb - OSP-Core, OSP-RTMP
-  * /var/www/images - OSP-Core
+  * `/var/www/videos` - OSP-Core, OSP-RTMP
+  * `/var/www/stream-thumb` - OSP-Core, OSP-RTMP
+  * `/var/www/images` - OSP-Core
 * **SSL/TLS** - If OSP Core systems use HTTPS with SSL/TLS certificates, certificates will also be needed for the Ejabberd, Edge, Proxy, or OSP-RTMP (Only if using Proxy) Servers to prevent issues with HTTP(s) mixed content.
 * **MySQL & Redis** - the OSP Config Tool does not have an option for MySQL and Redis installs. It is recommended to be familar with their install and configuration prior to a Split Server Install
 In some instances, some services can be co-located on the same server. See rules below:
@@ -129,15 +129,15 @@ sudo apt-get install dialog
 cd flask-nginx-rtmp-manager
 sudo bash osp-config.sh
 ```
-4) Select Option 1 - "Install..."
-5) Select Option 6 - "Install Ejabberd"
+4) Select Option 1 - _"Install..."_
+5) Select Option 6 - _"Install Ejabberd"_
 6) During the install process, the Config Tool will ask for an Ejabberd Full Qualified Domain Name (FQDN). This should be the same as the public domain name which will be used to access OSP. This should be a valid DNS entry. Use of an IP address may not function properly.
 7) On completion, exit the OSP Config Tool.
 8) Setup a new Ejabberd admin account.
 ```bash
 sudo /usr/local/ejabberd/bin/ejabberdctl register admin localhost <password>
 ```
-9) Edit the ejabberd.yml
+9) Edit the `ejabberd.yml`
 ```bash
 sudo nano /usr/local/ejabberd/conf/ejabberd.yml
 ```
@@ -164,8 +164,8 @@ ip:
 - ::1/128
 - <ip address of OSP Core>
 ```
-11) Save the ejabberd.yml file
-12) Edit the auth_osp.py Authentication Handler
+11) Save the `ejabberd.yml` file
+12) Edit the `auth_osp.py` Authentication Handler
 ```
 sudo nano /usr/local/ejabberd/conf/auth_osp.py
 ```
@@ -174,7 +174,7 @@ sudo nano /usr/local/ejabberd/conf/auth_osp.py
 protocol = "https"
 ospAPIServer = "osp.example.com"
 ```
-14) Save the auth_osp.py file
+14) Save the `auth_osp.py` file
 15) Restart Ejabberd
 ```bash
 sudo systemctl restart ejabberd
@@ -185,7 +185,7 @@ sudo systemctl restart ejabberd
 sudo apt update
 sudo apt install redis-server
 ```
-2) Edit the redis.conf file
+2) Edit the `redis.conf` file
 ```bash
 sudo nano /etc/redis/redis.conf
 ```
@@ -197,7 +197,7 @@ bind 0.0.0.0
 ```conf
 requirepass <Password>
 ```
-5) Save the redis.conf file
+5) Save the `redis.conf` file
 6) Restart Redis
 ```bash
 sudo systemctl restart redis.service
@@ -252,14 +252,14 @@ sudo apt-get install dialog
 cd flask-nginx-rtmp-manager
 sudo bash osp-config.sh
 ```
-4) Select Option 1 - "Install..."
-5) Select Option 2 - "Install OSP-Core"
+4) Select Option 1 - _"Install..."_
+5) Select Option 2 - _"Install OSP-Core"_
 6) On completion, exit the OSP Config Tool.
-7) Copy the OSP config.py.dist file to config.py
+7) Copy the OSP `config.py.dist` file to `config.py`
 ```bash
 sudo cp /opt/osp/conf/config.py.dist /opt/osp/conf/config.py
 ```
-8) Edit the config.py file
+8) Edit the `config.py` file
 ```bash
 sudo nano /opt/osp/conf/config.py
 ```
@@ -280,7 +280,7 @@ ejabberdPass = "ejabberd_admin_password"
 ejabberdHost = "localhost" <--Leave this as localhost
 ejabberdServer ="ejabberd.example.com"
 ```
-12) Review the values in the OSP /opt/osp/conf/config.py.
+12) Review the values in the OSP `/opt/osp/conf/config.py`.
 > **_NOTE:_** secretKey and passwordSalt should be changed from their default values.
 ```bash
 sudo nano /opt/osp/conf/config.py
@@ -289,7 +289,7 @@ sudo nano /opt/osp/conf/config.py
 ```bash
 sudo systemctl restart osp.target
 ```
-14) Save the config.py file
+14) Save the `config.py` file
 15) Initialize the Database by running the command line upgrader
 ```bash
 sudo bash osp-config.sh upgrade db
@@ -311,10 +311,10 @@ sudo apt-get install dialog
 cd flask-nginx-rtmp-manager
 sudo bash osp-config.sh
 ```
-4) Select Option 1 - "Install..."
-5) Select Option 3 - "Install OSP-RTMP"
+4) Select Option 1 - _"Install..."_
+5) Select Option 3 - _"Install OSP-RTMP"_
 6) On completion, exit the OSP Config Tool.
-7) Copy and Edit the OSP-RTMP config.py file
+7) Copy and Edit the OSP-RTMP `config.py` file
 ```bash
 sudo cp /opt/osp-rtmp/conf/config.py.dist /opt/osp-rtmp/conf/config.py
 sudo nano /opt/osp-rtmp/conf/config.py
@@ -353,7 +353,7 @@ sudo bash osp-config.sh
 5) Select Option 4 - "Install OSP-Edge"
 6) When prompted, input the IP address of your OSP-RTMP Instance
 7) On completion, exit the OSP Config Tool.
-8) If you need to add additional authorized OSP-RTMP Instances, edit the osp-edge-rtmp.conf file for Nginx
+8) If you need to add additional authorized OSP-RTMP Instances, edit the `osp-edge-rtmp.conf` file for Nginx
 ```bash
 sudo nano /usr/local/nginx/conf/services/osp-edge-rtmp.conf
 ```
@@ -392,12 +392,12 @@ sudo apt-get install dialog
 cd flask-nginx-rtmp-manager
 sudo bash osp-config.sh
 ```
-4) Select Option 1 - "Install..."
-5) Select Option 5 - "Install OSP-Proxy"
+4) Select Option 1 - _"Install..."_
+5) Select Option 5 - _"Install OSP-Proxy"_
 6) When prompted, input the Protocol and Fully Qualified Domain Name of your OSP-Core Instance (ex: https://osp.example.com)
 7) On completion, exit the OSP Config Tool.
 8) If you are using TLS/SSL on your Core Site, Acquire a TLS Certificate
-9) Edit /usr/local/nginx/conf/custom/osp-proxy-custom-servers.conf
+9) Edit `/usr/local/nginx/conf/custom/osp-proxy-custom-servers.conf`
 ```bash
 sudo nano /usr/local/nginx/conf/custom/osp-proxy-custom-servers.conf
 ```
@@ -442,7 +442,7 @@ sudo bash updateUpstream.sh
 ```
 18) Connect to each OSP-RTMP/Single Server and perform the following on each:
 - If using TLS on the Core, Generate a TLS certificate
-- Edit the /usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf
+- Edit the `/usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf`
 ```bash
 sudo nano /usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf
 ```
@@ -452,7 +452,7 @@ sudo nano /usr/local/nginx/conf/custom/osp-rtmp-custom-authorizeproxy.conf
 allow 201.13.12.50;
 allow 193.10.3.9;
 ```
-- If using TLS, Edit the /usr/local/nginx/conf/custom/osp-rtmp-custom-server
+- If using TLS, Edit the `/usr/local/nginx/conf/custom/osp-rtmp-custom-server`
 ```
 sudo nano /usr/local/nginx/conf/custom/osp-rtmp-custom-server
 ```
@@ -469,7 +469,7 @@ ssl_protocols TLSv1.2 TLSv1.3;
 ```bash
 sudo systemctl restart nginx-osp
 ```
-18) If you forced an Edge Server on Step 14, Connect to the Edge Server and edit /usr/local/nginx/conf/locations/osp-edge-redirects.conf
+18) If you forced an Edge Server on Step 14, Connect to the Edge Server and edit `/usr/local/nginx/conf/locations/osp-edge-redirects.conf`
 ```bash
 sudo nano /usr/local/nginx/conf/custom/osp-edge-redirects.conf
 ```
@@ -477,7 +477,7 @@ sudo nano /usr/local/nginx/conf/custom/osp-edge-redirects.conf
 ```
 #add_header 'Access-Control-Allow-Origin' "*" always;
 ```
-- Edit the custom referes file at /usr/local/nginx/conf/custom/osp-edge-custom-refer.conf
+- Edit the custom referes file at `/usr/local/nginx/conf/custom/osp-edge-custom-refer.conf`
 ```
 sudo nano /usr/local/nginx/conf/custom/osp-edge-custom-refer.conf
 ```
@@ -524,7 +524,7 @@ Remember to set the required variables according to the comments inside the `doc
   - ```OSP_REDIS_PORT``` Redis Server Port
   - ```OSP_REDIS_PASSWORD``` Redis Password, if used
   - ```OSP_CORE_DB``` Database Connection string 
-    - ex: mysql+pymysql://\<DB User\>:\<DB Password>@\<DB Server>/osp
+    - ex: `mysql+pymysql://\<DB User\>:\<DB Password>@\<DB Server>/osp`
   - ```OSP_CORE_SECRETKEY``` Flask Secret Key (Should be Random Value)
   - ```OSP_CORE_PASSWORD_SALT``` User DB Salt Value (Should be Random Value)
   - ```OSP_CORE_ALLOWREGISTRATION``` Allow Users to Register (Bool)
@@ -558,8 +558,8 @@ Remember to set the required variables according to the comments inside the `doc
   
 
 #### Recommended Volumes/Mount Points
-- /var/www - Storage of Images, Streams, and Stored Video Files
-- /usr/local/nginx/conf - Contains the NginX Configuration files which can be altered to suit your needs (HTTPS without something like Traefik)
+- `/var/www` - Storage of Images, Streams, and Stored Video Files
+- `/usr/local/nginx/conf` - Contains the NginX Configuration files which can be altered to suit your needs (HTTPS without something like Traefik)
 
 ---
 
@@ -611,14 +611,14 @@ sudo systemctl restart osp.target
 ### Backup and Restore
 
 #### Backup
-System backups can be performed via making a backup copy of the /opt/osp/conf/config.py file and taking a SQL dump of the database using a tool like mysqldump
+System backups can be performed via making a backup copy of the `/opt/osp/conf/config.py` file and taking a SQL dump of the database using a tool like mysqldump
 ```
 sudo mysqldump --databases osp > dump.sql
 ```
 
 #### Restore
 
-1. Copy the backup config.py file to /opt/osp/conf
+1. Copy the backup `config.py` file to `/opt/osp/conf`
 2. Restore the SQL backup taken
 ```
 mysql < dump.sql
@@ -657,8 +657,8 @@ Beginning with OSP v0.7.0, Chat has been moved to an XMPP based system using eja
 
 #### Single Server
 By default, OSP will automatically install and configure XMPP components for use during install or upgrade to versions 0.7.0 or above. During the upgrade process, you will be prompted to enter the OSP Site Address. This address must match the OSP Site Address (Typically the OSP Fully Qualified Domain Name (FQDN) or IP Address of OSP) Failure to enter the correct address will cause the Chat system to not function properly.
-If you must change your OSP Site Address, this change must also be made to the ejabberd.yml configuration file and ejabberd restarted.
-You can find the ejabberd.yml file in ```/usr/local/ejabberd/conf/ejabberd.yml``` and edit the following lines:
+If you must change your OSP Site Address, this change must also be made to the `ejabberd.yml` configuration file and ejabberd restarted.
+You can find the `ejabberd.yml` file in ```/usr/local/ejabberd/conf/ejabberd.yml``` and edit the following lines:
 *Line 17-19*
 ```yaml
 hosts:
@@ -691,15 +691,15 @@ sudo wget -O "/tmp/ejabberd-20.04-linux-x64.run" "https://www.process-one.net/do
 chmod +x /tmp/ejabberd-20.04-linux-x64.run
 /tmp/ejabberd-20.04-linux-x64.run ----unattendedmodeui none --mode unattended --prefix /usr/local/ejabberd --cluster 0
 ```
-2. Create the conf directory and copy the ejabberd configuration yml, inetrc, and auth_osp.py from the OSP Repo to the directory
+2. Create the conf directory and copy the ejabberd configuration yml, inetrc, and `auth_osp.py` from the OSP Repo to the directory
 ```bash
 sudo mkdir /usr/local/ejabberd/conf
 wget -O "/usr/local/ejabberd/conf/ejabberd.yml" "https://gitlab.com/osp-group/flask-nginx-rtmp-manager/-/raw/master/installs/ejabberd/setup/ejabberd.yml"
 wget -O "/usr/local/ejabberd/conf/inetrc" "https://gitlab.com/osp-group/flask-nginx-rtmp-manager/-/raw/master/installs/ejabberd/setup/inetrc"
 wget -O "/usr/local/ejabberd/conf/auth_osp.py" "https://gitlab.com/osp-group/flask-nginx-rtmp-manager/-/raw/master/installs/ejabberd/setup/auth_osp.py"
 ```
-3. Edit the /usr/local/ejabberd/conf/ejabberd.yml file and update the fields based on your configuration
-**Line 17-19**: Set CHANGEME to your OSP's FQDN
+3. Edit the `/usr/local/ejabberd/conf/ejabberd.yml` file and update the fields based on your configuration
+**Line 17-19**: Set `CHANGEME` to your OSP's FQDN
 ```
 hosts:
 - localhost
@@ -757,11 +757,11 @@ admin:
 user:
 - "admin@localhost"
 ```
-**Line 164**: Change the location of the auth_osp.py file to match below
+**Line 164**: Change the location of the `auth_osp.py` file to match below
 ```
 extauth_program: "/usr/bin/python3 /usr/local/ejabberd/conf/auth_osp.py"
 ```
-**Line 167-173**: Set CHANGEME to your OSP's FQDN
+**Line 167-173**: Set `CHANGEME` to your OSP's FQDN
 ```
 host_config:
 "OSP.example.com":
@@ -776,7 +776,7 @@ anonymous_protocol: login_anon
 sudo apt-get install python3-pip
 sudo pip3 install requests
 ```
-5. Edit the /usr/local/ejabberd/conf/auth_osp.py file
+5. Edit the `/usr/local/ejabberd/conf/auth_osp.py` file
 **Line 4-5**: Change the protocol and ospAPIServer values to match your OSP Instance
 ```
 protocol = "http"
@@ -818,7 +818,7 @@ tcp_nodelay on;
 ```bash
 sudo systemctl restart nginx
 ```
-11. On the OSP Server, update the ejabberd admin password and add the ejabberdServer variable to the /opt/osp/conf/config.py file
+11. On the OSP Server, update the ejabberd admin password and add the ejabberdServer variable to the `/opt/osp/conf/config.py` file
 ```bash
 sudo vi /opt/osp/conf/config.py
 ```
@@ -836,11 +836,11 @@ sudo systemctl restart osp.target
 
 ### Network Configuration
 OSP's XMPP configuration requires the following open ports for chat to function:
-- TCP/5222: Used for ejabberd Client to Server connections
-- TCP/5269: Used for ejabberd Server to Server connections
-- TCP/5443: External Server Jabber HTTPS-BOSH connection *External Server Only*
-- TCP/5280: External Server Jabber HTTP-BOSH connection *External Server Only*
-- TCP/4560: External Server XML-RPC Server Control *External Server Only*
+- **TCP/5222**: Used for ejabberd Client to Server connections
+- **TCP/5269**: Used for ejabberd Server to Server connections
+- **TCP/5443**: External Server Jabber HTTPS-BOSH connection *External Server Only*
+- **TCP/5280**: External Server Jabber HTTP-BOSH connection *External Server Only*
+- **TCP/4560**: External Server XML-RPC Server Control *External Server Only*
 
 ### OSP Configuration
 XMPP Channels are configured on a channel by channel basis. You can find the settings under _My Channels_ -> _Chat_
@@ -970,10 +970,15 @@ sudo wget https://github.com/42wim/matterbridge/releases/download/v1.22.3/matter
 sudo chmod 755 /usr/bin/matterbridge
 sudo mkdir /etc/matterbridge
 ```
-You will now create your configuration file. There are a lot of integrations available but this document will focus on Twitch and Discord. More config help can be found in the Matterbridge Wiki
-For discord, you will need to create a bot and get it's auth token. [Create a Discord Bot](https://github.com/42wim/matterbridge/wiki/Discord-bot-setup)
-Get your ServerID and Channel ID by turning on developer mode then right clicking each to copy the ID.
-For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to [https://twitchapps.com/tmi](https://twitchapps.com/tmi) to get your oauth password. You need the whole thing, including the oauth:
+You will now create your configuration file. There are a lot of integrations available but this document will focus on Twitch and Discord. More config help can be found in the [Matterbridge Wiki](https://github.com/42wim/matterbridge/wiki/).  
+
+For discord, you will need to create a bot and get it's auth token.
+* [Create a Discord Bot](https://github.com/42wim/matterbridge/wiki/Discord-bot-setup)
+* Get your Server ID and Channel ID by turning on developer mode, then right clicking each to copy the ID.
+
+For twitch, you can create a new "bot" user or user your own.
+* Login to the account you wish to use as a relay
+* Go to [https://twitchapps.com/tmi](https://twitchapps.com/tmi) to get your oauth password. You need the whole thing, including the `oauth:`  
 ![Twitch Chat OAuth Password Generator Example](../_images/twitch_oauth_password_generator.png)
 
 Open an editor to create the config
@@ -1068,8 +1073,8 @@ Combine the full chain you create with the private key
 ```
 cat etc/letsencrypt/live/yoursite/privkey.pem /etc/letsencrypt/live/yoursite/fullchain.pem > ~/combined.pem
 ```
-Move your newly created combined pem file to a better location (something like /etc/ssl/ejabberd)
-Uncomment the following lines in /usr/local/ejabberd/conf/ejabberd.yml
+Move your newly created combined pem file to a better location (something like `/etc/ssl/ejabberd`)
+Uncomment the following lines in `/usr/local/ejabberd/conf/ejabberd.yml`
 ```
 certfiles:
 ```
@@ -1100,13 +1105,13 @@ certbot 1.13.0
 # mkdir /var/certbot
 # chmod 755 /var/certbot
 ```
-Edit the OSP nginx config to use this location for the certbot verification by adding the following lines to /usr/local/nginx/conf/nginx.conf
+Edit the OSP nginx config to use this location for the certbot verification by adding the following lines to `/usr/local/nginx/conf/nginx.conf`
 ```
 location /.well-known/acme-challenge {
 root /var/certbot;
 }
 ```
-These lines should go under your port 80 server, in my config I put them right below the line "include /usr/local/nginx/conf/locations/*.conf;"
+These lines should go under your port 80 server, in my config I put them right below the line "`include /usr/local/nginx/conf/locations/*.conf;`"
 ```
 # NGINX to HTTP Reverse Proxies
 server {
@@ -1131,7 +1136,7 @@ include /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf;
 ```
 # sudo certbot certonly --webroot -w /var/certbot -d <domain>
 ```
-This command will prompt you for a few pieces of information and then it will save your certs in /etc/letsencrypt/live/
+This command will prompt you for a few pieces of information and then it will save your certs in `/etc/letsencrypt/live/`
 ```
 - Congratulations! Your certificate and chain have been saved at:
 /etc/letsencrypt/live/<domain>/fullchain.pem
@@ -1143,7 +1148,7 @@ again. To non-interactively renew *all* of your certificates, run
 "certbot renew"
 ```
 ##### Configure nginx-osp to use SSL and the certificates you have requested
-Edit /usr/local/nginx/conf/custom/osp-custom-servers.conf and edit the section to similar to below:
+Edit `/usr/local/nginx/conf/custom/osp-custom-servers.conf` and edit the section to similar to below:
 Remember to change your domain name and certificate location to match the step above.
 ```
 #listen 80 default_server;
@@ -1154,7 +1159,7 @@ ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;
 ssl_protocols TLSv1.2 TLSv1.3;
 ```
 ##### Configure nginx-osp to do http to https redirect
-Uncomment all lines in /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf to read as follows:
+Uncomment all lines in `/usr/local/nginx/conf/custom/osp-custom-serversredirect.conf` to read as follows:
 ```
 server {
 listen 80;
