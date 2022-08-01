@@ -962,8 +962,10 @@ sudo mkdir /etc/matterbridge
 You will now create your configuration file. There are a lot of integrations available but this document will focus on Twitch and Discord. More config help can be found in the Matterbridge Wiki
 For discord, you will need to create a bot and get it's auth token. [Create a Discord Bot](https://github.com/42wim/matterbridge/wiki/Discord-bot-setup)
 Get your ServerID and Channel ID by turning on developer mode then right clicking each to copy the ID.
-For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to [https://twitchapps.com/tmi](https://twitchapps.com/tmi) to get your oauth password. You need the whole thing, including the oauth:
-![Twitch Chat OAuth Password Generator Example](https://i.imgur.com/2qzKSH2.png)
+For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to [https://twitchapps.com/tmi](https://twitchapps.com/tmi) to get your oauth password. You need the whole thing, including the oauth:  
+.. image:: images/Twitch_OAuth_Password_Generator.png
+  :alt: Twitch Chat OAuth Password Generator Example
+
 Open an editor to create the config
 ```
 sudo nano /etc/matterbridge/matterbridge.toml
