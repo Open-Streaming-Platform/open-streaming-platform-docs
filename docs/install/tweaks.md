@@ -10,6 +10,8 @@ sudo cp /opt/osp/setup/sysctl.d/30-osp-tcp.conf /etc/sysctl.d/
 sudo sysctl -p /etc/sysctl.d/30-osp-tcp.conf
 ```
 
+---
+
 ## Reverse Proxy
 In some instances where you are using OSP in a shared environment (Docker or other shared services) you may be required to have a reverse proxy in front of OSP. In these instances, some additional configuration may be required for your Edge Reverse Proxy.
 
@@ -43,6 +45,8 @@ proxy_set_header Connection "upgrade";
 proxy_pass http://IPADDRESS/socket.io;
 }
 ```
+
+---
 
 ## Database
 
@@ -87,6 +91,8 @@ max_connections = 100000
 ```
 sudo systemctl restart mariadb
 ```
+
+---
 
 ## Transcoding Tweaks
 
@@ -155,6 +161,8 @@ sudo mount -a
 sudo systemctl restart nginx-osp.service
 ```
 The new filesystem should now occur, if you execute ```df -h -t tmpfs```.
+
+---
 
 ## Scaling
 

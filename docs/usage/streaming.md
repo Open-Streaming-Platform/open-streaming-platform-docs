@@ -18,7 +18,7 @@ OSP is configured by default with the following settings:
 
 Due to these settings, the key to creating low delay streams is to ensure your Keyframe Interval for your RTMP Source is set to 1 second.
 
-Alterations to the the Nginx-RTMP configuration can be made by editing the osp-rtmp.conf file in /usr/local/nginx/conf. More information on the Nginx-RTMP directives can be found at https://github.com/arut/nginx-rtmp-module/wiki/Directives
+Alterations to the the Nginx-RTMP configuration can be made by editing the osp-rtmp.conf file in /usr/local/nginx/conf. More information on the Nginx-RTMP directives can be found at [https://github.com/arut/nginx-rtmp-module/wiki/Directives](https://github.com/arut/nginx-rtmp-module/wiki/Directives)
 
 ## Latency
 
