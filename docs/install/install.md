@@ -499,7 +499,7 @@ _Coming Soon_
 
 ---
 
-#### Docker Install
+### Docker Install
 A Dockerfile has been provided for running OSP in a container. However due to the way NginX, Gunicorn, Flask, and Docker work, for OSP to work properly, the Frontend must be exposed using Port 80 or 443 and the RTSP port from OBS or other streaming software must be exposed on Port 1935.
 This accomplished easily by using a reverse proxy in Docker such as Traefik. However, Port 1935 will not be proxied and must be mapped to the same port on the host.
 An external Redis server/container is required to handling asynchronous communications between the internal Gunicorn worker instances.
@@ -516,7 +516,7 @@ If you prefer pre-built containers you don't have to clone the whole repository 
 
 #### Environment Variables
 
-**Remember to set the required ones according to the comments and hints via the pre-set variables inside the `docker-compose.yml` file before running `docker-compose up`!** Else you may misconfigure those containers and need to start from scratch!
+Remember to set the required variables according to the comments inside the `docker-compose.yml` file **before** running `docker-compose up`! Else you may misconfigure those containers and need to start from scratch!
 
 ##### OSP-Core
   - ```OSP_SERVER_ADDRESS``` FQDN of the OSP Domain
