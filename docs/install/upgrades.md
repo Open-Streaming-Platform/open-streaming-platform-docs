@@ -3,11 +3,13 @@
 ## Standard Upgrade
 To upgrade any version, make sure that you are on the correct branch (usually master), and follow the steps as listed below:
 
+---
+
 ## Versions 0.9.x to x.x.x.x
 For all versions of OSP 0.9.0 and greater, the standard upgrade procedure has been changed to the following steps to prevent requiringa separate upgrade script moving forward.
 
 ### Single Server Install
----
+
 1) Open the OSP Directory
 ```
 cd /opt/osp
@@ -43,6 +45,8 @@ sudo bash osp-config.sh
 5) Select the Option Listed for the Component you are updating
 
 To upgrade any version, make sure that you are on the correct branch (usually master), run osp-config.sh and select the compontent to upgrade. If further steps are required for specific versions, they are described below.
+
+---
 
 ## Version 0.8.x to Version 0.9.x
 Due to changes made with the database upgrade structure, an update script has been made to help reset the state of the database upgrade tracking table. In the process, Nginx will also be updated so it is recommended to backup any customizations made in /usr/local/nginx/conf.  This includes TLS/SSL Cert configurations.
@@ -81,6 +85,8 @@ smtpEncryption="none"
 sudo systemctl restart osp.target
 ```
 
+---
+
 ## Versions < 0.8.8 to Versions > 0.8.8 
 Due to changes made in v0.8.8 to simplify Nginx Configurations, the upgrade to versions greater to 0.8. will require an extra step to move your server specific changes to the new setup.
 
@@ -101,10 +107,7 @@ sudo mkdir /usr/local/nginx/conf/custom
 5) Reopen the osp-config updater and run the update process a second time.
 6) Follow the instructions below to reconfigure the new custom nginx files
 
----
-
-
-The following files will need to be updates for each OSP service:
+The following files will need to be updated for each OSP service:
 1) **OSP-Core, OSP-Edge, ejabberd, Single Servers:** SSL/TLS Certificates will need to be transposed to the new location "/usr/local/nginx/conf/custom/osp-custom-servers.conf".  The original information is located in the original /usr/local/nginx/conf/nginx.conf file
 - Edit the /usr/local/nginx/conf/custom/osp-custom-servers.conf
 ```
@@ -172,6 +175,8 @@ allow 23.10.3.3;
 sudo systemctl restart nginx-osp
 ```
 
+---
+
 ## 0.8.x to 0.8.x
 
 1) Run the OSP config tool
@@ -180,6 +185,8 @@ sudo bash osp-config.sh
 ```
 2) Select -> 2 Upgrade...
 3) Select the component to upgrade (-> 1 if single server installation)
+
+---
 
 ## 0.7.x to 0.8.x
 > **Note:** SQLite is no longer supported, starting with OSP Version 0.8.0. Migrate to MySQL before upgrading or export a copy of the SQLite Database and reimport into a new MySQL DB while upgrading. (https://dbconvert.com/sqlite/mysql/)  
@@ -216,6 +223,8 @@ sudo systemctl restart ejabberd
 ```
 sudo systemctl restart osp.target
 ```
+
+---
 
 ## Resetting DB Migrations
 In some instances, when upgrading you may receive an error about duplicate columns existing.  If this occurs, you can reset the Flask-Migrate settings to allow the system to perform a reset upgrade.

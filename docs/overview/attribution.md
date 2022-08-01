@@ -29,5 +29,5 @@ Open Streaming Platform uses a number of open source projects to work properly:
 
 ## Other Thanks
 - @curldev on Discord for the amazing logo!
-- All the great contributors on Open Collective (https://opencollective.com/open-streaming-platform)! We couldn't do this without you!
+- All the great contributors on Open Collective ([https://opencollective.com/open-streaming-platform](https://opencollective.com/open-streaming-platform))! We couldn't do this without you!
 - The great community in the Discord channel for throwing ideas out and helping find bugs!

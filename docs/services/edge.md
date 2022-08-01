@@ -1,7 +1,7 @@
 # OSP-Edge
 The OSP Edge Streamer acts as a load balanced endpoint for OSP, allowing Live Stream viewers to be offloaded from the primary OSP Node to a cluster of Nginx-RTMP servers configured to receive RTMP restreams from the master. A minimum of Beta 5 is required to use.
 
-![OSP Edge Diagram](/_images/services_edge_layout.png)
+![OSP Edge Diagram](../_images/services_edge_layout.png)
 
 As many OSP Edge Streamer Nodes are needed can be created and added to OSP by an admin under the Admin -> Edge Streamers Configuration options.
 
@@ -16,7 +16,7 @@ As many OSP Edge Streamer Nodes are needed can be created and added to OSP by an
 
 > Note: Starting in Beta 6, the Master OSP Server can act as an Edge Node. This can be manually added by using the Master OSP Server's Site Address, as set in the Admin Settings Screen
 
-![OSP Edge Add Modal](/_images/services_edge_add_modal.png)
+![OSP Edge Add Modal](../_images/services_edge_add_modal.png)
 
 3. Activate each Edge Streamer that will be used.
 4. After adding your settings, you will need to restart Nginx-RTMP on the primary OSP Server

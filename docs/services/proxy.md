@@ -1,7 +1,7 @@
 # OSP-Proxy
 Starting with v0.8.8, you can use OSP-Proxy to help with load balancing of live streams. OSP Proxy works in the opposite fashion of OSP Edge. Instead of receiving a RTMP push of all streams from an RTMP server, OSP Proxy fetches a copy of the HLS files from RTMP servers and caches them for viewing. In addition, OSP Proxy does not need to do additional transcoding if using Adaptive Streaming. This is in contrast to OSP Edge, which must perform transcoding when Adaptive Streaming is turned on.
 
-![Proxy Diagram](/_images/services_proxy_layout.png)
+![Proxy Diagram](../_images/services_proxy_layout.png)
 
 ## Setting Up
 OSP Proxy can be installed via the osp-config.sh script. It must be installed on its own separate server to prevent conflicting with any other OSP service.
