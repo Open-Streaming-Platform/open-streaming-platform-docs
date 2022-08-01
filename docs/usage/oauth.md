@@ -1,7 +1,7 @@
 # OAuth Configuration
 Starting with Beta 6, OSP includes a configuration option to add oAuth Sign-On using preconfigured and custom OAuth2 Servers, such as Discord, Reddit, Azure Active Directory, etc.
 
-OSP OAuth configuration uses AuthLib (https://github.com/lepture/authlib).
+OSP OAuth configuration uses AuthLib ([https://github.com/lepture/authlib](https://github.com/lepture/authlib)).
 
 ## Adding an OAuth2 Provider
 You can add a new provider from the Admin Screen->oAuth Providers, as seen below:
@@ -22,7 +22,7 @@ When adding a new provider, you will be required to enter configuration settings
 - Authorize URL: Endpoint for User Authorization of OAuth 2
 - Authorize Token Params: Additional Parameters required for User Authorization. Expressed as a JSON Value.
 - API Base URL: Full URI for API Requests to the Provider. (Ex: https://example.com/api/)
-- Client Kwargs: Additional Arguments required to build an OAuth2 Session (https://docs.authlib.org/en/latest/client/api.html#authlib.integrations.requests_client.OAuth2Session). This is typically where you will place Authentication Scope such as:```{"scope":"email"}```
+- Client Kwargs: Additional Arguments required to build an OAuth2 Session ([https://docs.authlib.org/en/latest/client/api.html#authlib.integrations.requests_client.OAuth2Session](https://docs.authlib.org/en/latest/client/api.html#authlib.integrations.requests_client.OAuth2Session)). This is typically where you will place Authentication Scope such as:```{"scope":"email"}```
 - Profile Endpoint: Path of API Base URL where User Profile information can be retrieved (Ex: me/@profile)
 - ID Profile Value: Result Variable found in the results of a query to the Profile Endpoint which contains a unique ID value, typically "id"
 - User Profile Value: Result Variable found in the results of a query to the Profile Endpoint which contains a username
