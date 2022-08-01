@@ -227,7 +227,7 @@ sudo systemctl restart mysql
 ```bash
 sudo mysql
 ```
-7) Create the Database & User. Be aware the remote server ips should be the IP address(es) of the OSP-Core Systems (See https://mariadb.com/kb/en/configuring-mariadb-for-remote-client-access/#granting-user-connections-from-remote-hosts)
+7) Create the Database & User. Be aware the remote server ips should be the IP address(es) of the OSP-Core Systems (See [https://mariadb.com/kb/en/configuring-mariadb-for-remote-client-access/#granting-user-connections-from-remote-hosts](https://mariadb.com/kb/en/configuring-mariadb-for-remote-client-access/#granting-user-connections-from-remote-hosts))
 ```sql
 CREATE DATABASE osp;
 CREATE USER '<username>'@'<remote_server_ip>' IDENTIFIED BY '<password>';
@@ -505,13 +505,13 @@ This accomplished easily by using a reverse proxy in Docker such as Traefik. How
 An external Redis server/container is required to handling asynchronous communications between the internal Gunicorn worker instances.
 
 #### Docker-Compose
-The recommended method for OSP Deployment in Docker is to use the provided `docker-compose.yml` file which can be found here: https://gitlab.com/osp-group/open-streaming-platform-docker/-/blob/master/docker-compose.yml  
+The recommended method for OSP Deployment in Docker is to use the provided `docker-compose.yml` file which can be found here: [https://gitlab.com/osp-group/open-streaming-platform-docker/-/blob/master/docker-compose.yml](https://gitlab.com/osp-group/open-streaming-platform-docker/-/blob/master/docker-compose.yml)  
 If you prefer pre-built containers you don't have to clone the whole repository to set up all needed containers, just edit `docker-compose.yml` and change the `build` lines to the already provided `image` ones by removing/adding `#` in front of those accordingly. Before running `docker-compose up` make sure you edit all environment variables accordingly as it is a requirement to set those beforehand! There are multiple similar ones for each container which all need to be set to the exact same value for the setup process to run through smoothly, simply search/replace those for a faster workflow.
 
 #### Docker Hub URLs
-- ```OSP-Core```: https://hub.docker.com/r/deamos/osp-core
-- ```OSP-RTMP```: https://hub.docker.com/r/deamos/osp-rtmp
-- ```OSP-Ejabberd```: https://hub.docker.com/r/deamos/osp-ejabberd
+- ```OSP-Core```: [https://hub.docker.com/r/deamos/osp-core](https://hub.docker.com/r/deamos/osp-core)
+- ```OSP-RTMP```: [https://hub.docker.com/r/deamos/osp-rtmp](https://hub.docker.com/r/deamos/osp-rtmp)
+- ```OSP-Ejabberd```: [https://hub.docker.com/r/deamos/osp-ejabberd](https://hub.docker.com/r/deamos/osp-ejabberd)
 
 
 #### Environment Variables
@@ -606,7 +606,7 @@ dbLocation = 'mysql+pymysql://username:password@localhost/osp?charset=utf8mb4'
 ```
 sudo systemctl restart osp.target
 ```
-> Note: For Servers that have upgraded from versions prior to Beta 6, see https://wiki.openstreamingplatform.com/Install/Tweaks#database to convert from UTF8 to UTF8MB4 for Full Unicode Support
+> Note: For Servers that have upgraded from versions prior to Beta 6, see [https://wiki.openstreamingplatform.com/Install/Tweaks#database](https://wiki.openstreamingplatform.com/Install/Tweaks#database) to convert from UTF8 to UTF8MB4 for Full Unicode Support
 
 ### Backup and Restore
 
@@ -938,7 +938,7 @@ sudo systemctl restart ejabberd
 cat /usr/local/ejabberd/logs/ejabberd.log
 ```
 If the certificate retrieval was successful, you will see success messages for the certificate. Don't worry about the local host warnings. If you see warnings for your FQDN, verify that your DNS entries are valid.
-![enter image description here](https://i.imgur.com/yihxN8W.png)
+![Certificate Retrieval Log Outputs](https://i.imgur.com/yihxN8W.png)
 Allow ejabberd traffic through your firewall. If you are hosting from home, be sure to port forward to your OSP host.
 ```
 sudo ufw allow 5222/tcp
@@ -962,8 +962,8 @@ sudo mkdir /etc/matterbridge
 You will now create your configuration file. There are a lot of integrations available but this document will focus on Twitch and Discord. More config help can be found in the Matterbridge Wiki
 For discord, you will need to create a bot and get it's auth token. [Create a Discord Bot](https://github.com/42wim/matterbridge/wiki/Discord-bot-setup)
 Get your ServerID and Channel ID by turning on developer mode then right clicking each to copy the ID.
-For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to https://twitchapps.com/tmi to get your oauth password. You need the whole thing, including the oauth:
-![enter image description here](https://i.imgur.com/2qzKSH2.png)
+For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to [https://twitchapps.com/tmi](https://twitchapps.com/tmi) to get your oauth password. You need the whole thing, including the oauth:
+![Twitch Chat OAuth Password Generator Example](https://i.imgur.com/2qzKSH2.png)
 Open an editor to create the config
 ```
 sudo nano /etc/matterbridge/matterbridge.toml
@@ -975,7 +975,7 @@ Token="yourDiscordBotsToken"
 Server="YourServerID"
 RemoteNickFormat="{PROTOCOL}-**<{NICK}>** "
 [irc.twitch]
-#Add the oauth token here you got from https://twitchapps.com/tmi/
+#Add the oauth token here you got from [https://twitchapps.com/tmi/](https://twitchapps.com/tmi/)
 Password="oauth:SomeLettersAndNumbers"
 Nick="YourTwitchBotsName"
 Server="irc.twitch.tv:6667"
@@ -1049,7 +1049,7 @@ Matterbridge Server re-run the matterbridge application with the -debug flag
 #### Manually configuring certificates if auto creation is not functioning
 If the automated acme-challenge isnt working for one reason or another, you can create a cert and assign it manually. Run this command replacing subdomain.domain.tld with your fqdn
 ```
-sudo certbot certonly --manual -d conference.subdomain.domain.tld -d proxy.subdomain.domain.tld -d pubsub.subdomain.domain.tld -d subdomain.domain.tld --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server https://acme-v02.api.letsencrypt.org/directory
+sudo certbot certonly --manual -d conference.subdomain.domain.tld -d proxy.subdomain.domain.tld -d pubsub.subdomain.domain.tld -d subdomain.domain.tld --agree-tos --no-bootstrap --manual-public-ip-logging-ok --preferred-challenges dns-01 --server [https://acme-v02.api.letsencrypt.org/directory](https://acme-v02.api.letsencrypt.org/directory)
 ```
 Create txt records on your dns when asked. You will require a txt record for each subdomain.
 Combine the full chain you create with the private key
@@ -1071,7 +1071,7 @@ Be SURE to line up your - /etc with the rest of the dashes in the yml file. YAML
 The focus of this guide will be to provide an example of how to setup SSL with LetsEncrypt and Certbot.
 For this example we are using a default install of OSP on Ubuntu 20.04 (or 18.04) LTS
 ##### Step one, install Certbot
-Install certbot (running with Nginx) as described at https://certbot.eff.org/instructions
+Install certbot (running with Nginx) as described at [https://certbot.eff.org/instructions](https://certbot.eff.org/instructions)
 Installion of certbot in short (for most systems) works with snap as follows:
 ```
 # sudo snap install core; sudo snap refresh core
@@ -1170,7 +1170,7 @@ apt install -y haproxy
 apt install -y certbot
 ```
 After installing run haproxy -v to confirm installed and working as intended. You should get an output like:
-HA-Proxy version 2.0.13-2ubuntu0.3 2021/08/27 - https://haproxy.org/
+HA-Proxy version 2.0.13-2ubuntu0.3 2021/08/27 - [https://haproxy.org/](https://haproxy.org/)
 
 ### Setup Config File
 Once the install is done you can then configure the Config file
@@ -1306,4 +1306,4 @@ Job done!
 
 ### Lock Down Stats Page
 If you want the stats page to be active then haproxy have a good blog post on how to lock it down and also what all of the metrics mean below:
-https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/
+[https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/](https://www.haproxy.com/blog/exploring-the-haproxy-stats-page/)
