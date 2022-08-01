@@ -12,6 +12,8 @@ OSP has been verified to work with the following requirements
 - 120 GB HDD Storage
 - Upstream Bandwidth > 35Mbps for 720p/30fps  Streams to 10 people @  3500kbps bit rate
 
+---
+
 ## Install Open Streaming Platform
 ### Script Install - Single Server (OSP-Core, OSP-RTMP, Ejabberd, Redis, MySQL)
 1) Clone the git repository
@@ -41,6 +43,7 @@ sudo nano /opt/osp/conf/config.py
 sudo systemctl restart osp.target
 ```
 To test streaming on the server, see the "Testing OSP server" section of the [Streaming](/Usage/Streaming) page.
+
 ### Script Install - Split Server Install - OSP Components on Different Servers
 Starting with OSP version 0.8.0, OSP components can be split over multiple servers. This helps with spreading the load required for a busy OSP install with many viewers. In addition, splitting the components can be useful to set up load balancing by having multiple copies of the component and using a load balancer, such as HAproxy.
 To perform a Split Server Setup, please review the following requirements:
@@ -489,25 +492,31 @@ sudo systemctl restart nginx-osp
 19) Add the OSP-Proxy Domain to the OSP-Core's Admin Panel under Settings
 20) Test a Stream and verify that the video is displaying
 
+---
+
 ### Manual Install
-Coming Soon
+_Coming Soon_
 
-### Docker Install
+---
 
+#### Docker Install
 A Dockerfile has been provided for running OSP in a container. However due to the way NginX, Gunicorn, Flask, and Docker work, for OSP to work properly, the Frontend must be exposed using Port 80 or 443 and the RTSP port from OBS or other streaming software must be exposed on Port 1935.
 This accomplished easily by using a reverse proxy in Docker such as Traefik. However, Port 1935 will not be proxied and must be mapped to the same port on the host.
 An external Redis server/container is required to handling asynchronous communications between the internal Gunicorn worker instances.
 
 #### Docker-Compose
-The recommended method for OSP Deployment in Docker is to use the provided docker-compose.yml file.  This file can be found at https://gitlab.com/osp-group/open-streaming-platform-docker/-/blob/master/docker-compose.yml
+The recommended method for OSP Deployment in Docker is to use the provided `docker-compose.yml` file which can be found here: https://gitlab.com/osp-group/open-streaming-platform-docker/-/blob/master/docker-compose.yml  
+If you prefer pre-built containers you don't have to clone the whole repository to set up all needed containers, just edit `docker-compose.yml` and change the `build` lines to the already provided `image` ones by removing/adding `#` in front of those accordingly. Before running `docker-compose up` make sure you edit all environment variables accordingly as it is a requirement to set those beforehand! There are multiple similar ones for each container which all need to be set to the exact same value for the setup process to run through smoothly, simply search/replace those for a faster workflow.
 
 #### Docker Hub URLs
-- ```OSP-Core``` https://hub.docker.com/r/deamos/osp-core
-- ```OSP-RTMP``` https://hub.docker.com/r/deamos/osp-rtmp
-- ```OSP-Ejabberd``` https://hub.docker.com/r/deamos/osp-ejabberd
+- ```OSP-Core```: https://hub.docker.com/r/deamos/osp-core
+- ```OSP-RTMP```: https://hub.docker.com/r/deamos/osp-rtmp
+- ```OSP-Ejabberd```: https://hub.docker.com/r/deamos/osp-ejabberd
 
 
 #### Environment Variables
+
+**Remember to set the required ones according to the comments and hints via the pre-set variables inside the `docker-compose.yml` file before running `docker-compose up`!** Else you may misconfigure those containers and need to start from scratch!
 
 ##### OSP-Core
   - ```OSP_SERVER_ADDRESS``` FQDN of the OSP Domain
@@ -551,6 +560,8 @@ The recommended method for OSP Deployment in Docker is to use the provided docke
 #### Recommended Volumes/Mount Points
 - /var/www - Storage of Images, Streams, and Stored Video Files
 - /usr/local/nginx/conf - Contains the NginX Configuration files which can be altered to suit your needs (HTTPS without something like Traefik)
+
+---
 
 ## Database Setup
 
@@ -636,6 +647,8 @@ quit;
 ```
 6. Follow the steps for Setting up a New MySQL install, starting at Step 2
 7. On the Insital Setup Wizard, Restore your Database Per the Steps under Restore Above.
+
+---
 
 ## Chat (XMPP)
 Beginning with OSP v0.7.0, Chat has been moved to an XMPP based system using ejabberd. Channel chatrooms now maintain a temporary history and can be accessed by Guests, if configured.
@@ -1141,6 +1154,8 @@ Restart nginx.osp
 ```
 # sudo systemctl restart nginx-osp
 ```
+
+---
 
 ## HAProxy Load Balancing
 
