@@ -938,7 +938,7 @@ sudo systemctl restart ejabberd
 cat /usr/local/ejabberd/logs/ejabberd.log
 ```
 If the certificate retrieval was successful, you will see success messages for the certificate. Don't worry about the local host warnings. If you see warnings for your FQDN, verify that your DNS entries are valid.
-![Certificate Retrieval Log Outputs](https://i.imgur.com/yihxN8W.png)
+![Certificate Retrieval Log Outputs](../_images/certificate_retrieval_log_outputs.png)
 Allow ejabberd traffic through your firewall. If you are hosting from home, be sure to port forward to your OSP host.
 ```
 sudo ufw allow 5222/tcp
@@ -963,7 +963,7 @@ You will now create your configuration file. There are a lot of integrations ava
 For discord, you will need to create a bot and get it's auth token. [Create a Discord Bot](https://github.com/42wim/matterbridge/wiki/Discord-bot-setup)
 Get your ServerID and Channel ID by turning on developer mode then right clicking each to copy the ID.
 For twitch, you can create a new "bot" user or user your own. Login to the account you wish to use as a relay, then go to [https://twitchapps.com/tmi](https://twitchapps.com/tmi) to get your oauth password. You need the whole thing, including the oauth:
-![Twitch Chat OAuth Password Generator Example](images/Twitch_OAuth_Password_Generator.png)
+![Twitch Chat OAuth Password Generator Example](../_images/twitch_oauth_password_generator.png)
 
 Open an editor to create the config
 ```
