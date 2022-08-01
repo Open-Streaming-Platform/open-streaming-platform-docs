@@ -50,9 +50,9 @@ To perform a Split Server Setup, please review the following requirements:
 * **Componentaization** - Multiple components can be installed on a single server to reduce cost. Doing so can also prevent needing some of the considerations in this list. For Example, if you consolidate OSP-Core and OSP-RTMP and do not require OSP-Edge Servers, you will not need Centralized storage as they
 * **Centralized Storage** - OSP requires some form of mounted centralized storage for Videos, Clips, & Stream/Video Thumbnails. This can be accomplished easily by using an S3-based storage bucket and using s3fs to mount the bucket to the servers file systems. Another method would be a NFS mount in the require location. Below is the required drive mounts and locations
 * **Mounts**
-* /var/www/videos - OSP-Core, OSP-RTMP
-* /var/www/stream-thumb - OSP-Core, OSP-RTMP
-* /var/www/images - OSP-Core
+  * /var/www/videos - OSP-Core, OSP-RTMP
+  * /var/www/stream-thumb - OSP-Core, OSP-RTMP
+  * /var/www/images - OSP-Core
 * **SSL/TLS** - If OSP Core systems use HTTPS with SSL/TLS certificates, certificates will also be needed for the Ejabberd, Edge, Proxy, or OSP-RTMP (Only if using Proxy) Servers to prevent issues with HTTP(s) mixed content.
 * **MySQL & Redis** - the OSP Config Tool does not have an option for MySQL and Redis installs. It is recommended to be familar with their install and configuration prior to a Split Server Install
 In some instances, some services can be co-located on the same server. See rules below:
@@ -843,19 +843,29 @@ OSP's XMPP configuration requires the following open ports for chat to function:
 - TCP/4560: External Server XML-RPC Server Control *External Server Only*
 
 ### OSP Configuration
-XMPP Channels are configured on a channel by channel basis. You can find the settings under Your Channels -> Chat
-![2020-06-07_19_53_27-osp_demo_-_user_channels_page_and_11_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_19_53_27-osp_demo_-_user_channels_page_and_11_more_pages_-_personal_-_microsoft​_edge.png)
+XMPP Channels are configured on a channel by channel basis. You can find the settings under _My Channels_ -> _Chat_
+![](../_images/user_channel_page_settings_chat.png)
 Channel configuration allows you to define who is allowed to chat, how chat is managed, and who can manage it.
-- **Room Title:** Name of Room, displayed to XMPP Chat Clients
-- **Description:** Room description, displayed to XMPP Chat Clients
-- **Moderated:** Only Users Identified as Participants may Chat
-- **Allow guests to join room:** Allow Unauthenticated Guest Users to Join the Chat
-- **Allow guests to chat:** Automatically set Unauthenticated Guest Users as Participants
-You may also define automatic moderators for your channel in the Add Moderator section.
+- **Room Title**: Name of Room, displayed to XMPP Chat Clients
+- **Description**: Room description, displayed to XMPP Chat Clients
+- **Chat message format**: Changes the appearance of chat messages.
+  - **Messenger**: Separates every message into it's own "bubble".  
+  ![Chat Message Format - Messenger](../_images/chat_message_format_messenger.png)
+  - **IRC**: A more Twitch-Like experience.  
+  ![Chat Message Format - IRC](../_images/chat_message_format_irc.png)
+- **Moderated**: Only Users Identified as Participants may Chat
+- **Allow guests to join room**: Allow Unauthenticated Guest Users to Join the Chat
+- **Allow guests to chat**: Automatically set Unauthenticated Guest Users as Participants.
+- **Allow guests to set their Nickname**: Allows and asks Unauthenticated Guest Users to set a Nickname.
+- **Show join and part messages**: Shows in chat when Users connect and disconnect from the Chat.
+- **Chat history**: How long chat messages should be displayed in the Web Chat. (Does not affect 3rd Party Clients! Restart ejabberd to clear history!)
+- **Moderators**: Add and Remove Chat Moderators from this Channel.
+- **Chat Stickers**: Upload and Manage stickers (essentially custom emojis) for this channel. The OSP Instance Admin can also define Global Stickers which will show up on all channels.
 
 ### Usage
 The Chat Window is a basic display of conversations and moderation controls for users and admins. You can view who is in a channel, view their profile, or control basic functions such as ban lists or channel roles.
-![2020-06-07_20_04_07-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_04_07-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png)
+![Chat](../_images/chat.png)  
+
 All users are set as one the following roles:
 - **Moderator**: Able to control the room and has access to all moderator controls
 - **Participant**: Able to Chat in the room (ie: has voice)
@@ -863,13 +873,14 @@ All users are set as one the following roles:
 Any role changes made by a moderator are set as permanent and will remain on joining / leaving a room.
 
 ### User Options
-By clicking on a username in chat or in the User List, users and moderators are displayed options targeting that user.
-![2020-06-07_20_10_21-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_10_21-osp_demo_-_osp_demo_1_and_11_more_pages_-_personal_-_microsoft​_edge.png)
+By clicking on a username in chat or in the User List, users and moderators are displayed options targeting that user.  
+![Chat User](../_images/chat_user.png)  
 
 ### User Controls
-- **Profile**: Opens a Popup that displays the User's Bio and any Channels, Streams, Videos, or Clips they may own
+- **Profile**: Opens a Popup that displays the User's Bio and any Channels, Streams, Videos, or Clips they may own.
 - **Mute**: Hides all chat from a user for your account. You will no longer see any messages from the user until you unmute them.
 
+![Chat User - Mod Controls](../_images/chat_user_modcontrols.png)
 ### Mod Controls
 - **Kick**: Removes the user from the chatroom.
 - **Ban**: Removes the user from the chatroom and flags their username as banned.
@@ -880,10 +891,10 @@ By clicking on a username in chat or in the User List, users and moderators are 
 - **Channel Voice Controls / Devoice**: Temporarily removes Participant Status
 
 ### Authentication
-Each User maintains an XMPP token which is required to authenticate to the Chat Server. This is handled by OSP by default, but the token can also be used to authenticate using an XMPP client. To find you XMPP token, you can go to your user settings and copy the XMPP token at the bottom of the page.
-![2020-06-07_20_23_32-osp_test_3_-_user_settings_and_12_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_23_32-osp_test_3_-_user_settings_and_12_more_pages_-_personal_-_microsoft​_edge.png)
-In addition to user XMPP tokens, each channel also maintains a XMPP token to be used when a Channel is set to be protected. In these instances, users may use the Channel XMPP Token to join the Chatroom using an external client.
-![2020-06-07_20_25_05-osp_demo_-_user_channels_page_and_12_more_pages_-_personal_-_microsoft​_edge.png](/2020-06-07_20_25_05-osp_demo_-_user_channels_page_and_12_more_pages_-_personal_-_microsoft​_edge.png)
+Each User maintains a XMPP username and password which is required to authenticate to the Chat Server. This is handled by OSP by default, but the login info can also be used to authenticate using an XMPP client. To find you XMPP login info, you can go to your user settings and copy the XMPP username and password at the top.  
+![XMPP Username and Password](../_images/user_settings_xmppaccess.png)  
+In addition to user specific XMPP login info, each channel also maintains a XMPP token to be used when a Channel is set to be protected. In these instances, users may use the Channel XMPP Token to join the Chatroom using an external client.  
+![Protected Channel XMPP Token](../_images/user_channel_page_settings_chat_xmpptoken.png)
 
 ### Two Way Integration with Other Chat Clients
 (Provided by djetaine on Discord)
