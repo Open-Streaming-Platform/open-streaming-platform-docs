@@ -1,5 +1,5 @@
 # About Open Streaming Platform
-[<img src="https://i.imgur.com/WBA40Yc.png" width="175"/>]()
+![](_images/osp_logo.png =175x)
 
 ## About
 Open Streaming Platform (OSP) is an open-source, RTMP streamer software front-end for Arut's NGINX RTMP Module.
