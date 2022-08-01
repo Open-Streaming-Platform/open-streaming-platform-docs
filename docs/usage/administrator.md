@@ -51,6 +51,6 @@ The OSP Dashboard contains a snapshot of information regarding the active state 
 ### Static Pages
 - ```Page Title```: Name of the Static Page
 - ```Page URL```: URL Slug for the static page.  Will be accessible via /p/$val
-- ```Icon```: Icon Class Name for the Static Page.  Should be the Font Awesome class name as found at https://fontawesome.com/search?m=free
+- ```Icon```: Icon Class Name for the Static Page.  Should be the Font Awesome class name as found at [https://fontawesome.com/search?m=free](https://fontawesome.com/search?m=free)
 - ```Display in Top Navbar```: Displays the Static Page in the top navbar, instead of the left sidebar
 - ```Page Content```: Markdown Content to be displayed
