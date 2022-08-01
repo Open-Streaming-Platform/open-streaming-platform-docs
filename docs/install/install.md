@@ -863,7 +863,7 @@ Channel configuration allows you to define who is allowed to chat, how chat is m
 - **Chat Stickers**: Upload and Manage stickers (essentially custom emojis) for this channel. The OSP Instance Admin can also define Global Stickers which will show up on all channels.
 
 ### Usage
-The Chat Window is a basic display of conversations and moderation controls for users and admins. You can view who is in a channel, view their profile, or control basic functions such as ban lists or channel roles.
+The Chat Window is a basic display of conversations and moderation controls for users and admins. You can view who is in a channel, view their profile, or control basic functions such as ban lists or channel roles.  
 ![Chat](../_images/chat.png)  
 
 All users are set as one the following roles:
@@ -878,8 +878,7 @@ By clicking on a username in chat or in the User List, users and moderators are 
 
 ### User Controls
 - **Profile**: Opens a Popup that displays the User's Bio and any Channels, Streams, Videos, or Clips they may own.
-- **Mute**: Hides all chat from a user for your account. You will no longer see any messages from the user until you unmute them.
-
+- **Mute**: Hides all chat from a user for your account. You will no longer see any messages from the user until you unmute them.  
 ![Chat User - Mod Controls](../_images/chat_user_modcontrols.png)
 ### Mod Controls
 - **Kick**: Removes the user from the chatroom.
