@@ -606,7 +606,7 @@ dbLocation = 'mysql+pymysql://username:password@localhost/osp?charset=utf8mb4'
 ```
 sudo systemctl restart osp.target
 ```
-> Note: For Servers that have upgraded from versions prior to Beta 6, see [https://wiki.openstreamingplatform.com/Install/Tweaks#database](https://wiki.openstreamingplatform.com/Install/Tweaks#database) to convert from UTF8 to UTF8MB4 for Full Unicode Support
+> Note: For Servers that have upgraded from versions prior to Beta 6, see [Installation > Tweaks > Database](https://open-streaming-platform.readthedocs.io/en/latest/install/tweaks.html#database) on the sidebar to convert from UTF8 to UTF8MB4 for Full Unicode Support
 
 ### Backup and Restore
 
