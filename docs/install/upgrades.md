@@ -35,7 +35,7 @@ git clone https://gitlab.com/osp-group/flask-nginx-rtmp-manager.git
 ```
 2) Open the Cloned Repo
 ```
-cd flask-nginx-rtmp-managher
+cd flask-nginx-rtmp-manager
 ```
 3) Run the OSP Configuration Tool Script
 ```
