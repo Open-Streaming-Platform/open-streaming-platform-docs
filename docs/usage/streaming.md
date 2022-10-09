@@ -82,3 +82,30 @@ ffmpeg -re -i "$file" -acodec libmp3lame -ar 44100 -vcodec copy -f flv rtmp://$f
 ```
 
 This should start streaming the video to the server. In order to verify everything is working as expected, use your browser to tune into the channel.
+
+#### OSP Web RTC Playback (Experimental) ####
+
+Starting in version 0.9.7, OSP now has the ability to send an RTMP Push of each stream to OvenMediaEngine and switch from HLS Playback -> WebRTC Playback on a channel's live page.  To Enable this functionality, perform the following:
+
+1) Install Oven Media Engine on another server.
+   - Another Server is recommended due to the possibility of conflicting ports (1935)
+2) Edit the /usr/local/nginx/conf/custom/osp-rtmp-ome.conf file on the OSP-RTMP Server
+   - Change the following line to match your OME setup and remove the leading `#`:
+   ```
+   # push rtmp://<OME Domain Name>:<OME RTMP IngestPort>/app/;
+   ```
+3) Restart Nginx-OSP
+```
+sudo systemctl restart nginx-osp
+```
+4) Log in as the OSP Admin and go to the Admin Settings
+5) Enable `WebRTC Playback` in the Channels Section
+6) Set the WebRTC Signaling Endpoint to point at the OvenMediaEngine Server
+   - Port 3333 for ws (insecure)
+   - Port 3334 for wss (secure)
+
+![WebRTC Admin Panel](../_images/osp-admin-webrtc1.png)
+
+> **Important Note**
+
+- WebRTC does not use the Channel Protection system currently.  While the channel protection system will secure OSP access to the channel, the WebRTC Endpoint will still be unencrypted and accessible if directly accessed outside of OSP. 
