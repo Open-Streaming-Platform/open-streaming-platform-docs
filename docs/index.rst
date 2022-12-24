@@ -24,6 +24,12 @@ Welcome to Open Streaming Platform's documentation!
 
 .. toctree::
    :maxdepth: 2
+   :caption: Backup:
+
+   backup/backup.md
+
+.. toctree::
+   :maxdepth: 2
    :caption: Usage:
 
    usage/streaming.md
