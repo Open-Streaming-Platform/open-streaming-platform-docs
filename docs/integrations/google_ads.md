@@ -49,11 +49,9 @@ Scroll through the file until you find the server block that looks like this:
 
 Within this block, add the following lines to create a route for the ads.txt file:
 
-`
     location ~ ^/ads.txt {
         root /opt/osp/static/;
     }
-`
 
 ## Save and Close the File
 
