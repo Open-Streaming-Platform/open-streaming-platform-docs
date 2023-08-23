@@ -14,16 +14,16 @@ Open Streaming Platform (OSP) is a powerful open-source solution for creating yo
 
 Before making any changes, it's always a good idea to backup your configuration file.
 
-'''bash
-sudo cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.backup
+'''
+    sudo cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.backup
 '''
 
 ## Open the nginx.conf File
 
 Use a text editor to open the nginx.conf file. For this example, we'll use nano.
 
-'''bash
-sudo nano /usr/local/nginx/conf/nginx.conf
+'''
+    sudo nano /usr/local/nginx/conf/nginx.conf
 '''
 
 ## Modify the Server Block
@@ -31,33 +31,33 @@ sudo nano /usr/local/nginx/conf/nginx.conf
 Scroll through the file until you find the server block that looks like this:
 
 '''
-# NGINX to HTTP Reverse Proxies
-server {
-    include /usr/local/nginx/conf/custom/osp-custom-servers.conf;
-
-    # set client body size to 16M #
-    client_max_body_size 16M;
-
-    include /usr/local/nginx/conf/locations/*.conf;
-
-    # redirect server error pages to the static page /50x.html
-    error_page   500 502 503 504  /50x.html;
-    location = /50x.html {
-        root   html;
+    # NGINX to HTTP Reverse Proxies
+    server {
+        include /usr/local/nginx/conf/custom/osp-custom-servers.conf;
+    
+        # set client body size to 16M #
+        client_max_body_size 16M;
+    
+        include /usr/local/nginx/conf/locations/*.conf;
+    
+        # redirect server error pages to the static page /50x.html
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   html;
+        }
+    
+        location /.well-known/acme-challenge {
+            root /var/certbot;
+        }
     }
-
-    location /.well-known/acme-challenge {
-        root /var/certbot;
-    }
-}
 '''
 
 Within this block, add the following lines to create a route for the ads.txt file:
 
 '''
-location ~ ^/ads.txt {
-    root /opt/osp/static/;
-}
+    location ~ ^/ads.txt {
+        root /opt/osp/static/;
+    }
 '''
 
 ## Save and Close the File
@@ -69,7 +69,7 @@ If you're using nano, press CTRL + O to save the file, then press Enter. Press C
 After making the changes, you'll need to reload Nginx to apply them.
 
 '''bash
-sudo systemctl reload nginx
+    sudo systemctl reload nginx
 '''
 
 ## Verification
