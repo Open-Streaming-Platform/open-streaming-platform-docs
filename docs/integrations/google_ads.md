@@ -14,23 +14,19 @@ Open Streaming Platform (OSP) is a powerful open-source solution for creating yo
 
 Before making any changes, it's always a good idea to backup your configuration file.
 
-'''
-    sudo cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.backup
-'''
+`sudo cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.backup`
 
 ## Open the nginx.conf File
 
 Use a text editor to open the nginx.conf file. For this example, we'll use nano.
 
-'''
-    sudo nano /usr/local/nginx/conf/nginx.conf
-'''
+`sudo nano /usr/local/nginx/conf/nginx.conf`
 
 ## Modify the Server Block
 
 Scroll through the file until you find the server block that looks like this:
 
-'''
+'
     # NGINX to HTTP Reverse Proxies
     server {
         include /usr/local/nginx/conf/custom/osp-custom-servers.conf;
@@ -50,15 +46,15 @@ Scroll through the file until you find the server block that looks like this:
             root /var/certbot;
         }
     }
-'''
+'
 
 Within this block, add the following lines to create a route for the ads.txt file:
 
-'''
+'
     location ~ ^/ads.txt {
         root /opt/osp/static/;
     }
-'''
+'
 
 ## Save and Close the File
 
@@ -68,9 +64,9 @@ If you're using nano, press CTRL + O to save the file, then press Enter. Press C
 
 After making the changes, you'll need to reload Nginx to apply them.
 
-'''bash
+'
     sudo systemctl reload nginx
-'''
+'
 
 ## Verification
 
