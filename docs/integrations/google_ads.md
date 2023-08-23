@@ -26,7 +26,6 @@ Use a text editor to open the nginx.conf file. For this example, we'll use nano.
 
 Scroll through the file until you find the server block that looks like this:
 
-`
     # NGINX to HTTP Reverse Proxies
     server {
         include /usr/local/nginx/conf/custom/osp-custom-servers.conf;
@@ -46,7 +45,7 @@ Scroll through the file until you find the server block that looks like this:
             root /var/certbot;
         }
     }
-`
+
 
 Within this block, add the following lines to create a route for the ads.txt file:
 
