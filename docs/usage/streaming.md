@@ -83,7 +83,7 @@ ffmpeg -re -i "$file" -acodec libmp3lame -ar 44100 -vcodec copy -f flv rtmp://$f
 
 This should start streaming the video to the server. In order to verify everything is working as expected, use your browser to tune into the channel.
 
-#### OSP Web RTC Playback (Experimental) ####
+## OSP Web RTC Playback (Experimental) ##
 
 Starting in version 0.9.7, OSP now has the ability to send an RTMP Push of each stream to OvenMediaEngine and switch from HLS Playback -> WebRTC Playback on a channel's live page.  To Enable this functionality, perform the following:
 
