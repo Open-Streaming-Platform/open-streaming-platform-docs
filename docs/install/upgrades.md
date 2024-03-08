@@ -1,5 +1,43 @@
 # Upgrades
 
+## Chat Upgrade
+
+In version 0.9.11 onwards, the default XMPP domain is changed to 'osp.internal'.
+New installations that use this version will have 'osp.internal' already set up for them, but existing installations that upgrade to 0.9.11 will need to do additional steps:
+
+### Versions < 0.9.11 to Versions >= 0.9.11
+
+1) Follow the 'Standard Upgrade' instructions to upgrade the OSP instance's code to version 0.9.11.
+2) Check in `/opt/osp/conf/config.py` and add to it the following parameter if it's not in the file:
+```
+### /opt/osp/conf/config.py
+
+# Sets the Ejabberd XMPP Chat Domain
+ospXMPPDomain = "osp.internal"`.
+```
+3) Update the /opt/ejabberd/conf/ejabberd.yml to change the 2 domain-specific lines, from your site's domain to "osp.internal"
+```
+hosts:
+  - localhost
+  - <your OSP site's domain name>    <-- replace with: osp.internal
+
+host_config:
+   "<your OSP site's domain name>":    <-- replace with: "osp.internal"
+     auth_method:
+       - external
+       - anonymous
+     allow_multiple_connections: true
+     anonymous_protocol: login_anon
+```
+
+4) Restart the appropriate services
+```
+service ejabberd restart
+systemctl restart osp.target        # This operation may take much longer compared to the other restarts.
+service osp-celery restart
+service osp-celery-beat restart
+```
+
 ## Standard Upgrade
 To upgrade any version, make sure that you are on the correct branch (usually master), and follow the steps as listed below:
 
@@ -35,7 +73,7 @@ git clone https://gitlab.com/osp-group/flask-nginx-rtmp-manager.git
 ```
 2) Open the Cloned Repo
 ```
-cd flask-nginx-rtmp-managher
+cd flask-nginx-rtmp-manager
 ```
 3) Run the OSP Configuration Tool Script
 ```
