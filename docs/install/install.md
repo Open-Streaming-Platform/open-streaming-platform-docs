@@ -1083,10 +1083,10 @@ Add directly beneath
 ```
 Be SURE to line up your - /etc with the rest of the dashes in the yml file. YAML is very picky about spacing. It must tbe exact.
 
-#### Let's Encrypt Setup
+## Let's Encrypt Setup
 The focus of this guide will be to provide an example of how to setup SSL with LetsEncrypt and Certbot.
 For this example we are using a default install of OSP on Ubuntu 20.04 (or 18.04) LTS
-##### Step one, install Certbot
+### Step one, install Certbot
 Install certbot (running with Nginx) as described at [https://certbot.eff.org/instructions](https://certbot.eff.org/instructions)
 Installion of certbot in short (for most systems) works with snap as follows:
 ```
@@ -1099,7 +1099,7 @@ Verify certbot is installed:
 # certbot --version
 certbot 1.13.0
 ```
-##### Create a location for certbot verification outside of the actual webroot
+### Create a location for certbot verification outside of the actual webroot
 ```
 # mkdir /var/certbot
 # chmod 755 /var/certbot
@@ -1129,9 +1129,12 @@ root html;
 }
 include /usr/local/nginx/conf/custom/osp-custom-serversredirect.conf;
 ```
-##### Restart Nginx
-```sudo systemctl restart nginx-osp```
-##### Run certbot to request certs from LetsEncrypt
+Restart nginx.osp to apply modification for certbot to generate cert.
+```
+# sudo systemctl restart nginx-osp
+```
+
+### Run certbot to request certs from LetsEncrypt
 ```
 # sudo certbot certonly --webroot -w /var/certbot -d <domain>
 ```
@@ -1146,7 +1149,7 @@ version of this certificate in the future, simply run certbot
 again. To non-interactively renew *all* of your certificates, run
 "certbot renew"
 ```
-##### Configure nginx-osp to use SSL and the certificates you have requested
+### Configure nginx-osp to use SSL and the certificates you have requested
 Edit `/usr/local/nginx/conf/custom/osp-custom-servers.conf` and edit the section to similar to below:
 Remember to change your domain name and certificate location to match the step above.
 ```
@@ -1157,7 +1160,7 @@ ssl_certificate /etc/letsencrypt/live/osp.example.com/fullchain.pem;
 ssl_certificate_key /etc/letsencrypt/live/osp.example.com/privkey.pem;
 ssl_protocols TLSv1.2 TLSv1.3;
 ```
-##### Configure nginx-osp to do http to https redirect
+### Configure nginx-osp to do http to https redirect
 Uncomment all lines in `/usr/local/nginx/conf/custom/osp-custom-serversredirect.conf` to read as follows:
 ```
 server {
@@ -1166,7 +1169,7 @@ server_name _;
 return 301 https://$host$request_uri;
 }
 ```
-Restart nginx.osp
+Restart nginx.osp a final time to update your configuration. 
 ```
 # sudo systemctl restart nginx-osp
 ```
