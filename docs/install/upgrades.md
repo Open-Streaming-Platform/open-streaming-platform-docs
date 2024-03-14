@@ -13,9 +13,9 @@ New installations that use this version will have 'osp.internal' already set up 
 ### /opt/osp/conf/config.py
 
 # Sets the Ejabberd XMPP Chat Domain
-ospXMPPDomain = "osp.internal"`.
+ospXMPPDomain = "osp.internal"
 ```
-3) Update the /opt/ejabberd/conf/ejabberd.yml to change the 2 domain-specific lines, from your site's domain to "osp.internal"
+3) Update the /path/to/ejabberd/conf/ejabberd.yml to change the 2 domain-specific lines, from your site's domain to "osp.internal"
 ```
 hosts:
   - localhost
@@ -30,7 +30,13 @@ host_config:
      anonymous_protocol: login_anon
 ```
 
-4) Restart the appropriate services
+4) Update /path/to/ejabberd/conf/auth_osp.py to change the "protocol" and "ospAPIServer" variables to the following values:
+```
+protocol = "http"
+ospAPIServer = "127.0.0.1:5010"
+```
+
+5) Restart the appropriate services
 ```
 service ejabberd restart
 systemctl restart osp.target        # This operation may take much longer compared to the other restarts.
