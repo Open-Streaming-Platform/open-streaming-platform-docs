@@ -31,6 +31,7 @@ sudo bash osp-config.sh
 ```
 4) Select Option 1 - _"Install..."_
 5) Select Option 1 - _"Install OSP - Single Server"_
+> **_NOTE:_** If you have existing installations of MariaDB and Nginx, they will be replaced/modified by this installation. You will also be shown this warning with a Yes/No choice, as one final confirmation before proceeding. So back up any config files or other important files related to MariaDB and Nginx beforehand.
 6) During the install process, the Config Tool will ask for an Ejabberd Full Qualified Domain Name (FQDN). This should be the same as the public domain name which will be used to access OSP. This should be a valid DNS entry as it is used to configure Ejabberd's Chat Domain and by default is used by the chat client to connect users to the XMPP chat system. IP addresses may not function properly.
 7) On completion, exit the OSP Config Tool.
 8) Review the values in the OSP `/opt/osp/conf/config.py`.
